@@ -1,9 +1,10 @@
 package ov3rdr1ve.reflection_server.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
-import java.util.List;
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
 @Table(name="comment")
 public class Comment {

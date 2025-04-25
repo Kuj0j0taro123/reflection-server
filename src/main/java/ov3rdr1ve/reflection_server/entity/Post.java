@@ -1,9 +1,12 @@
 package ov3rdr1ve.reflection_server.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
 @Table(name="post")
 public class Post {
@@ -15,15 +18,11 @@ public class Post {
 
     private String text;
 
-    @OneToMany(mappedBy = "parentPost", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-
-    @ManyToMany(mappedBy = "likedPosts")
+    @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.LAZY)
     private List<User> userLikes;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User poster;
+    @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
     @ManyToOne
     @JoinColumn(name="author_id")
@@ -32,12 +31,11 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String text, List<Comment> comments, List<User> userLikes, User poster, User author) {
+    public Post(String title, String text, List<User> userLikes, User author) {
         this.title = title;
         this.text = text;
-        this.comments = comments;
+
         this.userLikes = userLikes;
-        this.poster = poster;
         this.author = author;
     }
 
@@ -65,28 +63,12 @@ public class Post {
         this.text = text;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
     public List<User> getUserLikes() {
         return userLikes;
     }
 
     public void setUserLikes(List<User> userLikes) {
         this.userLikes = userLikes;
-    }
-
-    public User getPoster() {
-        return poster;
-    }
-
-    public void setPoster(User poster) {
-        this.poster = poster;
     }
 
     public User getAuthor() {
