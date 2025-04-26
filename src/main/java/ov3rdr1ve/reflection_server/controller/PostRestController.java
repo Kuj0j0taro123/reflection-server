@@ -1,6 +1,8 @@
 package ov3rdr1ve.reflection_server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,17 +23,26 @@ public class PostRestController {
     }
 
     @GetMapping("/post/{postId}")
-    public PostDTO getById(@PathVariable int postId){
-        return postService.findById(postId);
+    public ResponseEntity<?> getById(@PathVariable int postId){
+        PostDTO result = postService.findById(postId);
+        if (result == null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/posts/{authorId}")
-    public List<PostDTO> getByAuthorId(@PathVariable int authorId){
-        return postService.findByAuthorId(authorId);
+    public ResponseEntity<?> getByAuthorId(@PathVariable int authorId){
+        List<PostDTO> results = postService.findByAuthorId(authorId);
+
+        if (results == null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
-    @GetMapping("/posts/name/{authorUsername}")
-    public List<PostDTO> getByAuthorUsername(@PathVariable String authorUsername){
-        return postService.findByAuthorUsername(authorUsername);
-    }
+//    @GetMapping("/posts/name/{authorUsername}")
+//    public List<PostDTO> getByAuthorUsername(@PathVariable String authorUsername){
+//        return postService.findByAuthorUsername(authorUsername);
+//    }
 }

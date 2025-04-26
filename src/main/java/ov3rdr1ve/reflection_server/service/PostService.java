@@ -11,5 +11,5 @@ public interface PostService {
 
     public PostDTO findById(int id);
     public List<PostDTO> findByAuthorId(int id);
-    public List<PostDTO> findByAuthorUsername(String username);
+    //public List<PostDTO> findByAuthorUsername(String username);
 }

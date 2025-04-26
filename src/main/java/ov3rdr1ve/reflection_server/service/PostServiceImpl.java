@@ -6,6 +6,7 @@ import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.repository.PostRepository;
+import ov3rdr1ve.reflection_server.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +16,12 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService{
 
     private PostRepository postRepository;
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserService userService){
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository){
         this.postRepository = postRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -38,7 +39,9 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Post convertToEntity(PostDTO postDTO) {
-        // todo: implement this later
+        Optional<Post> result = postRepository.findById(postDTO.getId());
+        if (result.isPresent())
+            return result.get();
         return null;
     }
 
@@ -55,33 +58,37 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> findByAuthorId(int id) {
-        User user = userService.findById(id);
-        if (user == null)
-            return null;
-        List<Post> results = postRepository.findByAuthor(user);
-        List<PostDTO> posts = new ArrayList<>();
+        Optional<User> result = userRepository.findById(id);
 
-        for (Post result : results){
-            PostDTO postDTO = convertToDto(result);
-            posts.add(postDTO);
+        if (result.isEmpty())
+            return null;
+
+        User user = result.get();
+
+        List<Post> foundPosts = postRepository.findByAuthor(user);
+        List<PostDTO> postDtos = new ArrayList<>();
+
+        for (Post post : foundPosts){
+            PostDTO postDTO = convertToDto(post);
+            postDtos.add(postDTO);
         }
 
-        return posts;
+        return postDtos;
     }
 
-    @Override
-    public List<PostDTO> findByAuthorUsername(String username) {
-        User user = userService.findByUsername(username);
-        if (user == null)
-            return null;
-        List<Post> results = postRepository.findByAuthor(user);
-        List<PostDTO> posts = new ArrayList<>();
-
-        for (Post result : results){
-            PostDTO postDTO = convertToDto(result);
-            posts.add(postDTO);
-        }
-
-        return posts;
-    }
+//    @Override
+//    public List<PostDTO> findByAuthorUsername(String username) {
+//        User user = userService.findByUsername(username);
+//        if (user == null)
+//            return null;
+//        List<Post> results = postRepository.findByAuthor(user);
+//        List<PostDTO> posts = new ArrayList<>();
+//
+//        for (Post result : results){
+//            PostDTO postDTO = convertToDto(result);
+//            posts.add(postDTO);
+//        }
+//
+//        return posts;
+//    }
 }

@@ -1,9 +1,9 @@
 package ov3rdr1ve.reflection_server.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.service.UserService;
 
@@ -19,24 +19,29 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
-    public List<User> findAll(){
-        return userService.findAll();
+
+
+    @GetMapping("/users/id/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable int userId){
+        UserDTO userDTO = userService.findById(userId);
+
+//        if (userDTO == null)
+//            throw new RuntimeException("User " + id + " not not found");
+        if (userDTO == null){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}")
-    public User getUserById(@PathVariable int id){
-        User user = userService.findById(id);
+    @GetMapping("/users/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username){
+        UserDTO userDTO = userService.findByUsername(username);
 
-        if (user == null)
-            throw new RuntimeException("User " + id + " not not found");
+        if (userDTO == null){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
 
-        return user;
-    }
-
-    @GetMapping("/users/name/{username}")
-    public User getUserByUsername(@PathVariable String username){
-        User user = userService.findByUsername(username);
-        return user;
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 }
