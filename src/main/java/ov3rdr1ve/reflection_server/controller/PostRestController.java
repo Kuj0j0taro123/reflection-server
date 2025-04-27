@@ -41,6 +41,11 @@ public class PostRestController {
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
+    @GetMapping("/posts")
+    public List<PostDTO> getAllPosts(){
+        return postService.findAll();
+    }
+
 //    @GetMapping("/posts/name/{authorUsername}")
 //    public List<PostDTO> getByAuthorUsername(@PathVariable String authorUsername){
 //        return postService.findByAuthorUsername(authorUsername);
