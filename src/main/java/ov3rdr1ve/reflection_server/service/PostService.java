@@ -9,6 +9,7 @@ public interface PostService {
     public PostDTO convertToDto(Post post);
     public Post convertToEntity(PostDTO postDTO);
 
+    public List<PostDTO> findAll();
     public PostDTO findById(int id);
     public List<PostDTO> findByAuthorId(int id);
     //public List<PostDTO> findByAuthorUsername(String username);
