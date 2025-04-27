@@ -29,9 +29,9 @@ public class PostServiceImpl implements PostService{
         // todo: check here for errors (like, if the post even exists in the database)
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
-        postDTO.setTitle(post.getTitle());
         postDTO.setText(post.getText());
         postDTO.setAuthorId(post.getAuthor().getId());
+        postDTO.setAuthorUsername(post.getAuthor().getUsername());
         postDTO.setUserLikes(post.getUserLikes().size());
 
         return postDTO;
@@ -43,6 +43,17 @@ public class PostServiceImpl implements PostService{
         if (result.isPresent())
             return result.get();
         return null;
+    }
+
+    @Override
+    public List<PostDTO> findAll() {
+        List<Post> foundPosts = postRepository.findAll();
+        List<PostDTO> postDtos = new ArrayList<>();
+        for (Post post : foundPosts){
+            postDtos.add(convertToDto(post));
+        }
+
+        return postDtos;
     }
 
     @Override
