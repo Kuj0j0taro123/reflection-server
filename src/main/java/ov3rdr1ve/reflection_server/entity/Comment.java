@@ -14,6 +14,8 @@ public class Comment {
     @Column(name="id")
     private int id;
 
+    private String authorUsername;
+
     private String text;
 
     @ManyToOne
@@ -31,6 +33,7 @@ public class Comment {
         this.text = text;
         this.parentPost = parentPost;
         this.author = author;
+        this.authorUsername = author.getUsername();
     }
 
     public int getId() {
@@ -40,6 +43,7 @@ public class Comment {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public String getText() {
         return text;
@@ -63,5 +67,6 @@ public class Comment {
 
     public void setAuthor(User author) {
         this.author = author;
+        this.authorUsername = author.getUsername();
     }
 }

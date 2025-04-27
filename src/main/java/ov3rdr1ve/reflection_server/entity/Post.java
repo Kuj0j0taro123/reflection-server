@@ -14,7 +14,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String title;
+    private String authorUsername;
 
     private String text;
 
@@ -31,8 +31,8 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String text, List<User> userLikes, User author) {
-        this.title = title;
+    public Post(String text, List<User> userLikes, User author) {
+        this.authorUsername = author.getUsername();
         this.text = text;
 
         this.userLikes = userLikes;
@@ -47,13 +47,6 @@ public class Post {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getText() {
         return text;
@@ -77,5 +70,6 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
+        this.authorUsername = author.getUsername();
     }
 }

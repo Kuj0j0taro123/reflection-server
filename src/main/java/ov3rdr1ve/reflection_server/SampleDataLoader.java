@@ -36,13 +36,11 @@ public class SampleDataLoader implements CommandLineRunner {
         userRepository.save(bob);
 
         Post post1 = new Post();
-        post1.setTitle("This is a sample post");
         post1.setText("Hello, world!");
         post1.setAuthor(alice);
         postRepository.save(post1);
 
         Post post2 = new Post();
-        post2.setTitle("Sample title");
         post2.setText("sample text");
         post2.setAuthor(bob);
         postRepository.save(post2);
@@ -69,13 +67,11 @@ public class SampleDataLoader implements CommandLineRunner {
         userRepository.save(david);
 
         Post post3 = new Post();
-        post3.setTitle("Another sample post");
         post3.setText("This is another sample post.");
         post3.setAuthor(charlie);
         postRepository.save(post3);
 
         Post post4 = new Post();
-        post4.setTitle("Yet another sample post");
         post4.setText("This is yet another sample post.");
         post4.setAuthor(david);
         postRepository.save(post4);

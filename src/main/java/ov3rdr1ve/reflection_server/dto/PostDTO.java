@@ -3,7 +3,7 @@ package ov3rdr1ve.reflection_server.dto;
 
 public class PostDTO {
     private int id;
-    private String title;
+    private String authorUsername;
     private String text;
     private int userLikes;
     private int authorId;
@@ -19,12 +19,12 @@ public class PostDTO {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getAuthorUsername() {
+        return authorUsername;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 
     public String getText() {

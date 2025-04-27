@@ -7,16 +7,11 @@ public class CommentDTO {
     private String text;
     private int parentPostId;
     private int authorId;
+    private String authorUsername;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(int id, String text, int parentPostId, int authorId) {
-        this.id = id;
-        this.text = text;
-        this.parentPostId = parentPostId;
-        this.authorId = authorId;
-    }
 
     public int getId() {
         return id;
@@ -48,5 +43,13 @@ public class CommentDTO {
 
     public void setAuthorId(int authorId) {
         this.authorId = authorId;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 }
