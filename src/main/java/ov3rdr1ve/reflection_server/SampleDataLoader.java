@@ -2,6 +2,7 @@ package ov3rdr1ve.reflection_server;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ov3rdr1ve.reflection_server.entity.Comment;
 import ov3rdr1ve.reflection_server.entity.Post;
@@ -10,29 +11,40 @@ import ov3rdr1ve.reflection_server.repository.CommentRepository;
 import ov3rdr1ve.reflection_server.repository.PostRepository;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
+import java.util.List;
+
 @Component
 public class SampleDataLoader implements CommandLineRunner {
 
     private UserRepository userRepository;
     private PostRepository postRepository;
     private CommentRepository commentRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SampleDataLoader(UserRepository userRepository, CommentRepository commentRepository, PostRepository postRepository) {
+    public SampleDataLoader(UserRepository userRepository, CommentRepository commentRepository, PostRepository postRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+        List<String> roles = List.of("USER");
+
         // Existing sample data
         User alice = new User();
         alice.setUsername("alice01");
+        alice.setPassword(passwordEncoder.encode("1234"));
+        alice.setRoles(roles);
         userRepository.save(alice);
 
         User bob = new User();
         bob.setUsername("bob");
+        bob.setPassword(passwordEncoder.encode("1234"));
+        bob.setRoles(roles);
         userRepository.save(bob);
 
         Post post1 = new Post();
@@ -60,10 +72,14 @@ public class SampleDataLoader implements CommandLineRunner {
         // New sample data
         User charlie = new User();
         charlie.setUsername("charlie");
+        charlie.setPassword(passwordEncoder.encode("1234"));
+        charlie.setRoles(roles);
         userRepository.save(charlie);
 
         User david = new User();
         david.setUsername("david");
+        david.setPassword(passwordEncoder.encode("1234"));
+        david.setRoles(roles);
         userRepository.save(david);
 
         Post post3 = new Post();

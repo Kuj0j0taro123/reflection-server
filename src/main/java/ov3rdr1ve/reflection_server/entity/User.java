@@ -18,6 +18,14 @@ public class User {
     @Column(unique=true, nullable = false)
     private String username;
 
+    private String password;
+
+
+    @ElementCollection
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private List<String> roles;
+
     @ManyToMany
     @JoinTable(
           name="user_following",
@@ -47,15 +55,6 @@ public class User {
     public User() {
     }
 
-    public User(String username, List<User> followingList, List<User> followersList, List<Post> likedPosts, List<Post> posts, List<Comment> comments) {
-        this.username = username;
-        this.followingList = followingList;
-        this.followersList = followersList;
-        this.likedPosts = likedPosts;
-        this.posts = posts;
-        this.comments = comments;
-    }
-
     public int getId() {
         return id;
     }
@@ -70,6 +69,22 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public List<User> getFollowingList() {
