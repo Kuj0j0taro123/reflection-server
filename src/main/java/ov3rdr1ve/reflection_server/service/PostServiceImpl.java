@@ -15,8 +15,8 @@ import java.util.Optional;
 @Service
 public class PostServiceImpl implements PostService{
 
-    private PostRepository postRepository;
-    private UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public PostServiceImpl(PostRepository postRepository, UserRepository userRepository){
@@ -85,6 +85,19 @@ public class PostServiceImpl implements PostService{
         }
 
         return postDtos;
+    }
+
+    @Override
+    public void createPost(String username, String postText) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+        Post post = new Post();
+        post.setAuthor(user);
+        post.setText(postText);
+        post = postRepository.save(post);
+
+        user.getPosts().add(post);
+        //user = userRepository.save(user);
     }
 
 //    @Override

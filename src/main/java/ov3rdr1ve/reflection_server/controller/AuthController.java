@@ -2,6 +2,7 @@ package ov3rdr1ve.reflection_server.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,8 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
-
-import java.util.Map;
+import ov3rdr1ve.reflection_server.dto.actions.Response;
 
 @RestController
 @RequestMapping("/api")
@@ -34,7 +34,7 @@ public class AuthController {
         HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
 
-        return ResponseEntity.ok(Map.of("message", "Login successful"));
+        return new ResponseEntity<>(new Response("Login successful"), HttpStatus.OK);
     }
 
     @GetMapping("/whoami")

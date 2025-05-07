@@ -3,10 +3,14 @@ package ov3rdr1ve.reflection_server.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
+import ov3rdr1ve.reflection_server.dto.actions.CreatePostRequest;
+import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.service.PostService;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -41,6 +45,20 @@ public class PostRestController {
     @GetMapping("/posts")
     public List<PostDTO> getAllPosts(){
         return postService.findAll();
+    }
+
+    @PostMapping("/posts")
+    public ResponseEntity<?> createPost(@RequestBody CreatePostRequest createPostRequest, Authentication auth){
+        if (createPostRequest.getText().isEmpty())
+            return new ResponseEntity<>(new Response("Empty post text."), HttpStatus.BAD_REQUEST);
+        if (createPostRequest.getText().length() > 300)
+            return new ResponseEntity<>(new Response("Post text is too long."), HttpStatus.BAD_REQUEST);
+
+        String username = auth.getName();
+        postService.createPost(username, createPostRequest.getText());
+
+        return new ResponseEntity<>(new Response("Post created successfully"), HttpStatus.CREATED);
+
     }
 
 //    @GetMapping("/posts/name/{authorUsername}")
