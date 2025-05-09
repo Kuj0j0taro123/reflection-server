@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
+        userDTO.setDescription(user.getDescription());
 
         return userDTO;
     }

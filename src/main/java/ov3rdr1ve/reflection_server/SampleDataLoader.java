@@ -38,12 +38,14 @@ public class SampleDataLoader implements CommandLineRunner {
         User alice = new User();
         alice.setUsername("alice01");
         alice.setPassword(passwordEncoder.encode("1234"));
+        alice.setDescription("Hello, I am alice01.");
         alice.setRoles(roles);
         userRepository.save(alice);
 
         User bob = new User();
         bob.setUsername("bob");
         bob.setPassword(passwordEncoder.encode("1234"));
+        bob.setDescription("Hello, I am bob.");
         bob.setRoles(roles);
         userRepository.save(bob);
 
@@ -73,12 +75,14 @@ public class SampleDataLoader implements CommandLineRunner {
         User charlie = new User();
         charlie.setUsername("charlie");
         charlie.setPassword(passwordEncoder.encode("1234"));
+        charlie.setDescription("Hello, I am charlie.");
         charlie.setRoles(roles);
         userRepository.save(charlie);
 
         User david = new User();
         david.setUsername("david");
         david.setPassword(passwordEncoder.encode("1234"));
+        david.setDescription("Hello, I am david.");
         david.setRoles(roles);
         userRepository.save(david);
 
