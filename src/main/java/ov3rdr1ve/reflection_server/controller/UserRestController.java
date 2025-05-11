@@ -23,7 +23,7 @@ public class UserRestController {
 
 
 
-    @GetMapping("/users/id/{userId}")
+    @GetMapping("/user/id/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable int userId){
         UserDTO userDTO = userService.findById(userId);
 
@@ -36,7 +36,7 @@ public class UserRestController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{username}")
+    @GetMapping("/user/{username}")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username){
         UserDTO userDTO = userService.findByUsername(username);
 

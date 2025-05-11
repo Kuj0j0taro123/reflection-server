@@ -120,6 +120,41 @@ public class SampleDataLoader implements CommandLineRunner {
         comment6.setParentPost(post2);
         commentRepository.save(comment6);
 
+        Post post5 = new Post();
+        post5.setText("Left 4 Dead 2 is still one of the best zombie shooters");
+        post5.setAuthor(alice);
+        postRepository.save(post5);
+
+        Post post6 = new Post();
+        post6.setText("Just got done playing Mullet Madjack. What a great game!");
+        post6.setAuthor(alice);
+        postRepository.save(post6);
+
+        Post post7 = new Post();
+        post7.setText("Guys, remember to sleep enough");
+        post7.setAuthor(alice);
+        postRepository.save(post7);
+
+        Post post8 = new Post();
+        post8.setText("Spongebob");
+        post8.setAuthor(alice);
+        postRepository.save(post8);
+
+        Post post9 = new Post();
+        post9.setText("The Withcer 3 is 10 years old.");
+        post9.setAuthor(alice);
+        postRepository.save(post9);
+
+        Post post10 = new Post();
+        post10.setText("Dying Light is still one of the best zombie games.");
+        post10.setAuthor(alice);
+        postRepository.save(post10);
+
+        Post post11 = new Post();
+        post11.setText("Make sure you try out Outlast if you haven't yet.");
+        post11.setAuthor(alice);
+        postRepository.save(post11);
+
         System.out.println("Sample data loaded");
 
     }
