@@ -31,6 +31,7 @@ public class CommentServiceImpl implements CommentService{
         commentDTO.setParentPostId(comment.getParentPost().getId());
         commentDTO.setAuthorUsername(comment.getAuthor().getUsername());
         commentDTO.setText(comment.getText());
+        commentDTO.setCreatedOn(comment.getCreatedOn());
 
         return commentDTO;
     }

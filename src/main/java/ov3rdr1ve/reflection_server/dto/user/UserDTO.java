@@ -1,5 +1,7 @@
 package ov3rdr1ve.reflection_server.dto.user;
 
+import java.time.Instant;
+
 public class UserDTO {
     private int id;
     private String username;
@@ -7,17 +9,9 @@ public class UserDTO {
     private int numFollowers;
     private int numFollowing;
     private int numPosts;
+    private Instant createdOn;
 
     public UserDTO() {
-    }
-
-    public UserDTO(int id, String username, String description, int numFollowers, int numFollowing, int numPosts) {
-        this.id = id;
-        this.username = username;
-        this.description = description;
-        this.numFollowers = numFollowers;
-        this.numFollowing = numFollowing;
-        this.numPosts = numPosts;
     }
 
     public int getId() {
@@ -66,5 +60,13 @@ public class UserDTO {
 
     public void setNumPosts(int numPosts) {
         this.numPosts = numPosts;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
     }
 }

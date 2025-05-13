@@ -3,7 +3,9 @@ package ov3rdr1ve.reflection_server.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.util.List;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
@@ -13,8 +15,6 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    private String authorUsername;
 
     private String text;
 
@@ -28,15 +28,10 @@ public class Post {
     @JoinColumn(name="author_id")
     private User author;
 
+    @CreationTimestamp
+    private Instant createdOn;
+
     public Post() {
-    }
-
-    public Post(String text, List<User> userLikes, User author) {
-        this.authorUsername = author.getUsername();
-        this.text = text;
-
-        this.userLikes = userLikes;
-        this.author = author;
     }
 
     public int getId() {
@@ -70,6 +65,21 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
-        this.authorUsername = author.getUsername();
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
     }
 }

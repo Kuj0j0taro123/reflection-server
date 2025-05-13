@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setNumFollowers(user.getFollowersList().size());
         userDTO.setNumFollowing(user.getFollowingList().size());
         userDTO.setNumPosts(user.getPosts().size());
+        userDTO.setCreatedOn(user.getCreatedOn());
 
         return userDTO;
     }

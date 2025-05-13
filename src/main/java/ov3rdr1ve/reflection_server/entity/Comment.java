@@ -3,6 +3,9 @@ package ov3rdr1ve.reflection_server.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.Instant;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
@@ -14,7 +17,6 @@ public class Comment {
     @Column(name="id")
     private int id;
 
-    private String authorUsername;
 
     private String text;
 
@@ -26,6 +28,9 @@ public class Comment {
     @JoinColumn(name="author_id")
     private User author;
 
+    @CreationTimestamp
+    private Instant createdOn;
+
     public Comment() {
     }
 
@@ -33,7 +38,6 @@ public class Comment {
         this.text = text;
         this.parentPost = parentPost;
         this.author = author;
-        this.authorUsername = author.getUsername();
     }
 
     public int getId() {
@@ -67,6 +71,13 @@ public class Comment {
 
     public void setAuthor(User author) {
         this.author = author;
-        this.authorUsername = author.getUsername();
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
     }
 }

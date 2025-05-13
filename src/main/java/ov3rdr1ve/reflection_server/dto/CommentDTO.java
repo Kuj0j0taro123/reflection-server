@@ -2,12 +2,15 @@ package ov3rdr1ve.reflection_server.dto;
 
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 
+import java.time.Instant;
+
 public class CommentDTO {
     private int id;
     private String text;
     private int parentPostId;
     private int authorId;
     private String authorUsername;
+    private Instant createdOn;
 
     public CommentDTO() {
     }
@@ -51,5 +54,13 @@ public class CommentDTO {
 
     public void setAuthorUsername(String authorUsername) {
         this.authorUsername = authorUsername;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
     }
 }
