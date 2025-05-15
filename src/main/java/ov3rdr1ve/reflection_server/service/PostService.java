@@ -12,6 +12,7 @@ public interface PostService {
     public List<PostDTO> findAll();
     public PostDTO findById(int id);
     public List<PostDTO> findByAuthorId(int id);
+    public List<PostDTO> findByTextContent(String searchTerm);
     //public List<PostDTO> findByAuthorUsername(String username);
     public void createPost(String username, String postText);
 }

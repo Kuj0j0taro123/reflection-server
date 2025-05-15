@@ -89,6 +89,18 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public List<PostDTO> findByTextContent(String searchTerm) {
+        List<Post> results = postRepository.findByTextContainingIgnoreCase(searchTerm);
+        List<PostDTO> ret = new ArrayList<>();
+
+        for (Post post : results){
+            ret.add(convertToDto(post));
+        }
+
+        return ret;
+    }
+
+    @Override
     public void createPost(String username, String postText) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 

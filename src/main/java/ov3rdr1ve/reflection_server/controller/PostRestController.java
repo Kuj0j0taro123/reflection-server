@@ -61,6 +61,12 @@ public class PostRestController {
 
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchPosts(@RequestParam String q){ // q as in query (for posts)
+        List<PostDTO> results = postService.findByTextContent(q);
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
+
 //    @GetMapping("/posts/name/{authorUsername}")
 //    public List<PostDTO> getByAuthorUsername(@PathVariable String authorUsername){
 //        return postService.findByAuthorUsername(authorUsername);

@@ -141,7 +141,7 @@ public class SampleDataLoader implements CommandLineRunner {
         postRepository.save(post8);
 
         Post post9 = new Post();
-        post9.setText("The Withcer 3 is 10 years old.");
+        post9.setText("The Witcher 3 is 10 years old.");
         post9.setAuthor(alice);
         postRepository.save(post9);
 

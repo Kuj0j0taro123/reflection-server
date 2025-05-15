@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByAuthor(User author);
+    List<Post> findByTextContainingIgnoreCase(String searchTerm);
 }
