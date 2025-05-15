@@ -61,7 +61,7 @@ public class PostRestController {
 
     }
 
-    @GetMapping("/search")
+    @GetMapping("/posts/search")
     public ResponseEntity<?> searchPosts(@RequestParam String q){ // q as in query (for posts)
         List<PostDTO> results = postService.findByTextContent(q);
         return new ResponseEntity<>(results, HttpStatus.OK);

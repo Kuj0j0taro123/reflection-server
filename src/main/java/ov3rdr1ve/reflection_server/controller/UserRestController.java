@@ -47,6 +47,12 @@ public class UserRestController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/users/search")
+    public ResponseEntity<?> getUsersByUsername(@RequestParam String q){
+        return new ResponseEntity<>(userService.findUsersByUsername(q), HttpStatus.OK);
+
+    }
+
     @GetMapping("/whoami")
     public ResponseEntity<?> whoAmI(Authentication auth){
         return new ResponseEntity<>(userService.findByUsername(auth.getName()), HttpStatus.OK);

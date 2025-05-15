@@ -13,5 +13,6 @@ public interface UserService {
 
     public UserDTO findByUsername(String username);
     public UserDTO findById(int id);
+    public List<UserDTO> findUsersByUsername(String username);
 
 }

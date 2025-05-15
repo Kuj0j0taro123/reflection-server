@@ -5,6 +5,7 @@ import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,18 @@ public class UserServiceImpl implements UserService {
         }
 
         return null;
+    }
+
+    @Override
+    public List<UserDTO> findUsersByUsername(String username) {
+        List<User> results = userRepository.findByUsernameContainingIgnoreCase(username);
+        List<UserDTO> ret = new ArrayList<>();
+
+        for (User user : results){
+            ret.add(convertToDto(user));
+        }
+
+        return ret;
     }
 
 }
