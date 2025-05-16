@@ -4,11 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ov3rdr1ve.reflection_server.dto.actions.FollowUserRequest;
+import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.service.UserService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -51,6 +54,18 @@ public class UserRestController {
     public ResponseEntity<?> getUsersByUsername(@RequestParam String q){
         return new ResponseEntity<>(userService.findUsersByUsername(q), HttpStatus.OK);
 
+    }
+
+    @PostMapping("/follow")
+    public ResponseEntity<?> followUser(@RequestBody FollowUserRequest req, Authentication auth){
+
+        try{
+            userService.followUser(req.getUsername(), auth.getName());
+        } catch(NoSuchElementException ex){
+            return new ResponseEntity<>(new Response("User not found"), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(new Response("Success"), HttpStatus.OK);
     }
 
     @GetMapping("/whoami")

@@ -1,5 +1,6 @@
 package ov3rdr1ve.reflection_server.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
@@ -7,6 +8,7 @@ import ov3rdr1ve.reflection_server.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -76,6 +78,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return ret;
+    }
+
+    @Override
+    @Transactional
+    public void followUser(String userRequesting, String userReceiving) throws NoSuchElementException {
+        User requester = userRepository.findByUsername(userRequesting).orElseThrow();
+        User receiver = userRepository.findByUsername(userReceiving).orElseThrow();
+
+        requester.getFollowingList().add(receiver);
+        receiver.getFollowersList().add(requester);
+
+        userRepository.saveAll(List.of(requester, receiver));
+
     }
 
 }
