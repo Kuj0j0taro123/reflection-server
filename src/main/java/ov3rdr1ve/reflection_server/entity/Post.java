@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
@@ -19,10 +20,10 @@ public class Post {
     private String text;
 
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.LAZY)
-    private List<User> userLikes;
+    private Set<User> userLikes;
 
     @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
-    private List<Comment> comments;
+    private Set<Comment> comments;
 
     @ManyToOne
     @JoinColumn(name="author_id")
@@ -42,7 +43,6 @@ public class Post {
         this.id = id;
     }
 
-
     public String getText() {
         return text;
     }
@@ -51,12 +51,20 @@ public class Post {
         this.text = text;
     }
 
-    public List<User> getUserLikes() {
+    public Set<User> getUserLikes() {
         return userLikes;
     }
 
-    public void setUserLikes(List<User> userLikes) {
+    public void setUserLikes(Set<User> userLikes) {
         this.userLikes = userLikes;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public User getAuthor() {
@@ -65,14 +73,6 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 
     public Instant getCreatedOn() {
