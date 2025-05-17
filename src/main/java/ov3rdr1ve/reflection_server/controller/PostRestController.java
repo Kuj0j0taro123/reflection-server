@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.actions.CreatePostRequest;
+import ov3rdr1ve.reflection_server.dto.actions.LikeRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.service.PostService;
 
@@ -65,6 +66,21 @@ public class PostRestController {
     public ResponseEntity<?> searchPosts(@RequestParam String q){ // q as in query (for posts)
         List<PostDTO> results = postService.findByTextContent(q);
         return new ResponseEntity<>(results, HttpStatus.OK);
+    }
+
+    @PostMapping("/post/like")
+    public ResponseEntity<?> likePost(@RequestBody LikeRequest req, Authentication auth){
+        if (req.getAction() == 1){ // user like
+            postService.likePost(auth.getName(), req.getId());
+            return new ResponseEntity<>(new Response("Post liked successfully"), HttpStatus.OK);
+        }
+        if (req.getAction() == 0){ // user unlike
+            postService.unlikePost(auth.getName(), req.getId());
+            return new ResponseEntity<>(new Response("Post unliked successfully"), HttpStatus.OK);
+        }
+        // todo: add dislike functionality dislike
+        return new ResponseEntity<>(new Response("Unknown action"), HttpStatus.BAD_REQUEST);
+
     }
 
 //    @GetMapping("/posts/name/{authorUsername}")

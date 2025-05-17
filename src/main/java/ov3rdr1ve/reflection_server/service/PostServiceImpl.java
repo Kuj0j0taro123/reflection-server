@@ -1,5 +1,6 @@
 package ov3rdr1ve.reflection_server.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
@@ -10,6 +11,7 @@ import ov3rdr1ve.reflection_server.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -111,6 +113,36 @@ public class PostServiceImpl implements PostService{
 
         user.getPosts().add(post);
         //user = userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void likePost(String username, int postId) throws NoSuchElementException {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        user.getLikedPosts().add(post);
+        post.getUserLikes().add(user);
+
+        userRepository.save(user);
+        postRepository.save(post);
+    }
+
+    @Override
+    public void unlikePost(String username, int postId) throws NoSuchElementException {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        user.getLikedPosts().remove(post);
+        post.getUserLikes().remove(user);
+
+        userRepository.save(user);
+        postRepository.save(post);
+    }
+
+    @Override
+    public void dislikePost(String username, int postId) throws NoSuchElementException {
+
     }
 
 //    @Override

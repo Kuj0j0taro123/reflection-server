@@ -15,4 +15,7 @@ public interface PostService {
     public List<PostDTO> findByTextContent(String searchTerm);
     //public List<PostDTO> findByAuthorUsername(String username);
     public void createPost(String username, String postText);
+    public void likePost(String username, int postId);
+    public void unlikePost(String username, int postId);
+    public void dislikePost(String username, int postId);
 }
