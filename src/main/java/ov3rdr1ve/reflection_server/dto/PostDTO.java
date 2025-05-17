@@ -1,6 +1,8 @@
 package ov3rdr1ve.reflection_server.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 
 public class PostDTO {
@@ -10,6 +12,7 @@ public class PostDTO {
     private int userLikes;
     private int authorId;
     private Instant createdOn;
+    private boolean isLiked; // if the user requesting this post liked it
 
     public PostDTO() {
     }
@@ -60,5 +63,14 @@ public class PostDTO {
 
     public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
+    }
+
+    @JsonProperty(value="isLiked") // jackson renamed this property by removing the 'is' prefix, so this annotation is needed
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean isLiked) {
+        this.isLiked = isLiked;
     }
 }

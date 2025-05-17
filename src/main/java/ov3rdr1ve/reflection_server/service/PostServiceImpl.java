@@ -2,6 +2,9 @@ package ov3rdr1ve.reflection_server.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.entity.Post;
@@ -37,6 +40,10 @@ public class PostServiceImpl implements PostService{
         postDTO.setUserLikes(post.getUserLikes().size());
         postDTO.setCreatedOn(post.getCreatedOn());
 
+        // check if post is liked by user
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        postDTO.setLiked(post.getUserLikes().contains(user));
+
         return postDTO;
     }
 
@@ -50,12 +57,13 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDTO> findAll() {
+
         List<Post> foundPosts = postRepository.findAll();
         List<PostDTO> postDtos = new ArrayList<>();
         for (Post post : foundPosts){
             postDtos.add(convertToDto(post));
         }
-
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return postDtos;
     }
 
