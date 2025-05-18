@@ -2,6 +2,7 @@ package ov3rdr1ve.reflection_server.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -99,14 +100,25 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDTO> findByTextContent(String searchTerm) {
-        List<Post> results = postRepository.findByTextContainingIgnoreCase(searchTerm);
+    public List<PostDTO> findByTextContent(String searchTerm, Sort sort) {
+        List<Post> results = postRepository.findByTextContainingIgnoreCase(searchTerm, sort);
         List<PostDTO> ret = new ArrayList<>();
 
         for (Post post : results){
             ret.add(convertToDto(post));
         }
 
+        return ret;
+    }
+
+    @Override
+    public List<PostDTO> findByTextContentOrderByLikesDesc(String searchTerm) {
+        List<Post> results = postRepository.findByTextOrderByNumLikesDesc(searchTerm);
+        List<PostDTO> ret = new ArrayList<>();
+
+        for (Post post : results){
+            ret.add(convertToDto(post));
+        }
         return ret;
     }
 

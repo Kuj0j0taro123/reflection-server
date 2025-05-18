@@ -1,6 +1,7 @@
 package ov3rdr1ve.reflection_server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -63,8 +64,17 @@ public class PostRestController {
     }
 
     @GetMapping("/posts/search")
-    public ResponseEntity<?> searchPosts(@RequestParam String q){ // q as in query (for posts)
-        List<PostDTO> results = postService.findByTextContent(q);
+    public ResponseEntity<?> searchPosts(@RequestParam String q, @RequestParam String s){ // q as in query (for posts), s as in sort
+        // List<PostDTO> results = postService.findByTextContent(q);
+        List<PostDTO> results;
+        if (s.equalsIgnoreCase("top"))
+            results = postService.findByTextContentOrderByLikesDesc(q);
+        else if (s.equalsIgnoreCase("recent")){
+            results = postService.findByTextContent(q, Sort.by(Sort.Direction.DESC, "createdOn"));
+        }
+        else{
+            results = null;
+        }
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 

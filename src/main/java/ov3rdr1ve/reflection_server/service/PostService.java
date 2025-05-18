@@ -1,5 +1,6 @@
 package ov3rdr1ve.reflection_server.service;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.entity.Post;
@@ -13,7 +14,8 @@ public interface PostService {
     public List<PostDTO> findAll();
     public PostDTO findById(int id);
     public List<PostDTO> findByAuthorId(int id);
-    public List<PostDTO> findByTextContent(String searchTerm);
+    public List<PostDTO> findByTextContent(String searchTerm, Sort sort);
+    public List<PostDTO> findByTextContentOrderByLikesDesc(String searchTerm);
     //public List<PostDTO> findByAuthorUsername(String username);
     public void createPost(String username, String postText);
     public void likePost(String username, int postId);
