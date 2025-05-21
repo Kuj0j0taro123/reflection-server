@@ -40,6 +40,7 @@ public class PostServiceImpl implements PostService{
         postDTO.setAuthorUsername(post.getAuthor().getUsername());
         postDTO.setUserLikes(post.getUserLikes().size());
         postDTO.setCreatedOn(post.getCreatedOn());
+        postDTO.setNumComments(post.getComments().size());
 
         // check if post is liked by user
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();

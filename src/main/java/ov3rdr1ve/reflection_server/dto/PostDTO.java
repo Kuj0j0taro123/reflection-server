@@ -13,6 +13,7 @@ public class PostDTO {
     private int authorId;
     private Instant createdOn;
     private boolean isLiked; // if the user requesting this post liked it
+    private int numComments;
 
     public PostDTO() {
     }
@@ -72,5 +73,13 @@ public class PostDTO {
 
     public void setLiked(boolean isLiked) {
         this.isLiked = isLiked;
+    }
+
+    public int getNumComments() {
+        return numComments;
+    }
+
+    public void setNumComments(int numComments) {
+        this.numComments = numComments;
     }
 }

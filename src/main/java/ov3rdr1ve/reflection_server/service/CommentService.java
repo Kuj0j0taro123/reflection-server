@@ -12,6 +12,7 @@ public interface CommentService {
     public Comment convertToEntity(CommentDTO commentDTO);
 
     public List<CommentDTO> findByPostId(int postId);
+    public void comment(int id, String text);
 //    public CommentDTO findByAuthorId(int authorId);
 //    public CommentDTO findByAuthorUsername(String username);
 }
