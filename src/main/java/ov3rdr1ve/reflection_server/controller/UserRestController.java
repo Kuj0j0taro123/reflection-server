@@ -60,7 +60,7 @@ public class UserRestController {
     public ResponseEntity<?> followUser(@RequestBody FollowUserRequest req, Authentication auth){
 
         try{
-            userService.followUser(req.getUsername(), auth.getName());
+            userService.followUser(auth.getName(), req.getUsername());
         } catch(NoSuchElementException ex){
             return new ResponseEntity<>(new Response("User not found"), HttpStatus.BAD_REQUEST);
         }
