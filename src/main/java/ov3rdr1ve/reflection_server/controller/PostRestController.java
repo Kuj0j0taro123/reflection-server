@@ -12,7 +12,6 @@ import ov3rdr1ve.reflection_server.dto.actions.LikeRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.service.PostService;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -47,6 +46,11 @@ public class PostRestController {
     @GetMapping("/posts")
     public List<PostDTO> getAllPosts(){
         return postService.findAll();
+    }
+
+    @GetMapping("/posts/timeline")
+    public List<PostDTO> getTimeline(Authentication auth){
+        return postService.findTimelineFeed(auth.getName());
     }
 
     @PostMapping("/posts")

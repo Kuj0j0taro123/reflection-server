@@ -13,10 +13,7 @@ import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.repository.PostRepository;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -121,6 +118,21 @@ public class PostServiceImpl implements PostService{
             ret.add(convertToDto(post));
         }
         return ret;
+    }
+
+    @Override
+    public List<PostDTO> findTimelineFeed(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        Set<User> following = user.getFollowingList();
+
+        List<PostDTO> feed = new ArrayList<>();
+
+        List<Post> results = postRepository.findByAuthorInOrderByCreatedOnDesc(following);
+
+        for (Post post : results){
+            feed.add(convertToDto(post));
+        }
+        return feed;
     }
 
     @Override

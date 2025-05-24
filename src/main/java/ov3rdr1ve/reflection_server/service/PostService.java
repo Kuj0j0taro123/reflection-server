@@ -16,6 +16,7 @@ public interface PostService {
     public List<PostDTO> findByAuthorId(int id);
     public List<PostDTO> findByTextContent(String searchTerm, Sort sort);
     public List<PostDTO> findByTextContentOrderByLikesDesc(String searchTerm);
+    public List<PostDTO> findTimelineFeed(String username);
     //public List<PostDTO> findByAuthorUsername(String username);
     public void createPost(String username, String postText);
     public void likePost(String username, int postId);

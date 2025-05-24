@@ -8,6 +8,7 @@ import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByAuthor(User author);
@@ -17,5 +18,19 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "WHERE LOWER(e.text) LIKE LOWER (CONCAT('%', :searchTerm, '%')) " +
             "ORDER BY SIZE(e.userLikes) DESC")
     List<Post> findByTextOrderByNumLikesDesc(@Param("searchTerm") String searchTerm);
+    List<Post> findByAuthorInOrderByCreatedOnDesc(Set<User> authors);
+//    @Query("""
+//      select p
+//      from Post p
+//      where p.author in (
+//        select f
+//        from User u
+//        join u.followingList f
+//        where u = :user
+//      )
+//      order by p.createdOn desc
+//      """)
+//    List<Post> findTimelinePosts(@Param("user") User user);
+
 
 }
