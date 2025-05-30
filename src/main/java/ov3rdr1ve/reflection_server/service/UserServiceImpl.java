@@ -98,4 +98,15 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    @Transactional
+    public void unfollowUser(String userRequesting, String userReceiving) throws NoSuchElementException {
+        User requester = userRepository.findByUsername(userRequesting).orElseThrow();
+        User receiver = userRepository.findByUsername(userReceiving).orElseThrow();
+
+        requester.getFollowingList().remove(receiver);
+        receiver.getFollowersList().remove(requester);
+
+        userRepository.saveAll(List.of(requester, receiver));
+    }
 }

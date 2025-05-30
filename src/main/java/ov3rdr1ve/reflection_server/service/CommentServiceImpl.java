@@ -11,10 +11,7 @@ import ov3rdr1ve.reflection_server.repository.CommentRepository;
 import ov3rdr1ve.reflection_server.repository.PostRepository;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -69,6 +66,18 @@ public class CommentServiceImpl implements CommentService{
         }
 
         return commentDTOList;
+    }
+
+    @Override
+    public List<CommentDTO> findByAuthorId(int authorId) {
+        User author = userRepository.findById(authorId).orElseThrow();
+        Set<Comment> results = author.getComments();
+        ArrayList<CommentDTO> comments = new ArrayList<>();
+
+        for (Comment result : results){
+            comments.add(convertToDto(result));
+        }
+        return comments;
     }
 
     @Override

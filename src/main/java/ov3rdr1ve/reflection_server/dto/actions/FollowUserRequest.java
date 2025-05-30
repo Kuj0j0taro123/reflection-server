@@ -1,6 +1,11 @@
 package ov3rdr1ve.reflection_server.dto.actions;
 
 public class FollowUserRequest {
+    /*
+    1: follow
+    0: unfollow
+     */
+    int action;
     String username;
 
     public FollowUserRequest() {
@@ -14,4 +19,12 @@ public class FollowUserRequest {
         this.username = username;
     }
 
+
+    public int getAction() {
+        return action;
+    }
+
+    public void setAction(int action) {
+        this.action = action;
+    }
 }

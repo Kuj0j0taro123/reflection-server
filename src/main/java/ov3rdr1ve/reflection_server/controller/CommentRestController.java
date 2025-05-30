@@ -21,11 +21,16 @@ public class CommentRestController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/comments/{postId}")
+    @GetMapping("/comments/post/{postId}")
     public ResponseEntity<?> findCommentsByPostId(@PathVariable int postId){
         List<CommentDTO> comments = commentService.findByPostId(postId);
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
+    @GetMapping("/comments/user/{userId}")
+    public List<CommentDTO> findCommentsByUser(@PathVariable int userId){
+        return commentService.findByAuthorId(userId);
     }
 
     @PostMapping("/comment")
