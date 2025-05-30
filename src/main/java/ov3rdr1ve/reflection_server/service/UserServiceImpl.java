@@ -1,6 +1,7 @@
 package ov3rdr1ve.reflection_server.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
@@ -30,6 +31,10 @@ public class UserServiceImpl implements UserService {
         userDTO.setNumFollowing(user.getFollowingList().size());
         userDTO.setNumPosts(user.getPosts().size());
         userDTO.setCreatedOn(user.getCreatedOn());
+
+        User requester = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        userDTO.setFollowedByYou(user.getFollowersList().contains(requester));
+        userDTO.setFollowingYou(user.getFollowingList().contains(requester));
 
         return userDTO;
     }

@@ -1,5 +1,7 @@
 package ov3rdr1ve.reflection_server.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 
 public class UserDTO {
@@ -10,6 +12,8 @@ public class UserDTO {
     private int numFollowing;
     private int numPosts;
     private Instant createdOn;
+    private boolean isFollowingYou;
+    private boolean isFollowedByYou;
 
     public UserDTO() {
     }
@@ -68,5 +72,23 @@ public class UserDTO {
 
     public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
+    }
+
+    @JsonProperty(value="isFollowingYou")
+    public boolean isFollowingYou() {
+        return isFollowingYou;
+    }
+
+    public void setFollowingYou(boolean followingYou) {
+        isFollowingYou = followingYou;
+    }
+
+    @JsonProperty(value="isFollowedByYou")
+    public boolean isFollowedByYou() {
+        return isFollowedByYou;
+    }
+
+    public void setFollowedByYou(boolean followedByYou) {
+        isFollowedByYou = followedByYou;
     }
 }
