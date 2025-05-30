@@ -86,6 +86,13 @@ public class SampleDataLoader implements CommandLineRunner {
         david.setRoles(roles);
         userRepository.save(david);
 
+        User lurker = new User();
+        lurker.setUsername("lurker");
+        lurker.setPassword(passwordEncoder.encode("1234"));
+        lurker.setDescription("I don't post anything.");
+        lurker.setRoles(roles);
+        userRepository.save(lurker);
+
         Post post3 = new Post();
         post3.setText("This is another sample post.");
         post3.setAuthor(charlie);
