@@ -1,5 +1,6 @@
 package ov3rdr1ve.reflection_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 
 import java.time.Instant;
@@ -11,6 +12,8 @@ public class CommentDTO {
     private int authorId;
     private String authorUsername;
     private Instant createdOn;
+    private boolean isLiked;
+    private int userLikes;
 
     public CommentDTO() {
     }
@@ -62,5 +65,22 @@ public class CommentDTO {
 
     public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
+    }
+
+    @JsonProperty(value="isLiked")
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
+    public int getUserLikes() {
+        return userLikes;
+    }
+
+    public void setUserLikes(int userLikes) {
+        this.userLikes = userLikes;
     }
 }

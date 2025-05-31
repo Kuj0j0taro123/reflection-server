@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.Set;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
@@ -20,6 +21,9 @@ public class Comment {
 
     private String text;
 
+    @ManyToMany(mappedBy = "likedComments", fetch = FetchType.LAZY)
+    private Set<User> userLikes;
+
     @ManyToOne
     @JoinColumn(name="post_id")
     private Post parentPost;
@@ -32,12 +36,6 @@ public class Comment {
     private Instant createdOn;
 
     public Comment() {
-    }
-
-    public Comment(String text, Post parentPost, User author) {
-        this.text = text;
-        this.parentPost = parentPost;
-        this.author = author;
     }
 
     public int getId() {
@@ -79,5 +77,13 @@ public class Comment {
 
     public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public Set<User> getUserLikes() {
+        return userLikes;
+    }
+
+    public void setUserLikes(Set<User> userLikes) {
+        this.userLikes = userLikes;
     }
 }

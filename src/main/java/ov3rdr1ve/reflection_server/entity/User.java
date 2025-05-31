@@ -55,6 +55,14 @@ public class User {
     )
     private Set<Post> likedPosts; // posts liked by THIS USER
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_liked_comments",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id")
+    )
+    private Set<Comment> likedComments; // comments liked by THIS USER
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts; // posts made by THIS USER
 
@@ -150,5 +158,13 @@ public class User {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Set<Comment> getLikedComments() {
+        return likedComments;
+    }
+
+    public void setLikedComments(Set<Comment> likedComments) {
+        this.likedComments = likedComments;
     }
 }

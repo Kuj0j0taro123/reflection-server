@@ -36,6 +36,11 @@ public class CommentServiceImpl implements CommentService{
         commentDTO.setAuthorUsername(comment.getAuthor().getUsername());
         commentDTO.setText(comment.getText());
         commentDTO.setCreatedOn(comment.getCreatedOn());
+        commentDTO.setUserLikes(comment.getUserLikes().size());
+
+        // check if comment is liked by user
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        commentDTO.setLiked(comment.getUserLikes().contains(user));
 
         return commentDTO;
     }
@@ -82,7 +87,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public void comment(int id, String text) throws NoSuchElementException {
+    public void createComment(int id, String text) throws NoSuchElementException {
         Comment comment = new Comment();
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow();
@@ -98,6 +103,37 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.save(comment);
         postRepository.save(post);
         userRepository.save(user);
+
+    }
+
+    @Override
+    @Transactional
+    public void likeComment(String username, int commentId) throws NoSuchElementException{
+        User user = userRepository.findByUsername(username).orElseThrow();
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+
+        user.getLikedComments().add(comment);
+        comment.getUserLikes().add(user);
+
+        userRepository.save(user);
+        commentRepository.save(comment);
+
+    }
+
+    @Override
+    public void unlikeComment(String username, int commentId) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+
+        user.getLikedComments().remove(comment);
+        comment.getUserLikes().remove(user);
+
+        userRepository.save(user);
+        commentRepository.save(comment);
+    }
+
+    @Override
+    public void dislikeComment(String username, int commentId) {
 
     }
 
