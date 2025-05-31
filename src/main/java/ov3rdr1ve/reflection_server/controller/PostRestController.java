@@ -97,6 +97,11 @@ public class PostRestController {
 
     }
 
+    @GetMapping("/posts/liked")
+    public List<PostDTO> getLikedPosts(){
+        return postService.findLikedPosts();
+    }
+
 //    @GetMapping("/posts/name/{authorUsername}")
 //    public List<PostDTO> getByAuthorUsername(@PathVariable String authorUsername){
 //        return postService.findByAuthorUsername(authorUsername);

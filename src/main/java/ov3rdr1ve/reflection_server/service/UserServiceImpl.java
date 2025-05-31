@@ -3,14 +3,13 @@ package ov3rdr1ve.reflection_server.service;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
+import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -84,6 +83,8 @@ public class UserServiceImpl implements UserService {
 
         return ret;
     }
+
+
 
     @Override
     @Transactional

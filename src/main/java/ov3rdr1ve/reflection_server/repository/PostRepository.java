@@ -19,6 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             "ORDER BY SIZE(e.userLikes) DESC")
     List<Post> findByTextOrderByNumLikesDesc(@Param("searchTerm") String searchTerm);
     List<Post> findByAuthorInOrderByCreatedOnDesc(Set<User> authors);
+
 //    @Query("""
 //      select p
 //      from Post p

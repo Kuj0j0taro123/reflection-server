@@ -1,5 +1,6 @@
 package ov3rdr1ve.reflection_server.service;
 
+import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
 

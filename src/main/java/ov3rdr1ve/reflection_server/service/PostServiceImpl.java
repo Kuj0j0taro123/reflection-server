@@ -136,6 +136,20 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public List<PostDTO> findLikedPosts() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Set<Post> results = user.getLikedPosts();
+
+        ArrayList<PostDTO> posts = new ArrayList<>();
+
+        for (Post post : results){
+            posts.add(convertToDto(post));
+        }
+
+        return posts;
+    }
+
+    @Override
     public void createPost(String username, String postText) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
