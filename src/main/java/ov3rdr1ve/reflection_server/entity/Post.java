@@ -32,6 +32,10 @@ public class Post {
     @CreationTimestamp
     private Instant createdOn;
 
+    @OneToOne
+    @JoinColumn(name = "media_id", referencedColumnName = "id")
+    private Media media;
+
     public Post() {
     }
 
@@ -81,5 +85,13 @@ public class Post {
 
     public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public Media getMedia() {
+        return media;
+    }
+
+    public void setMedia(Media media) {
+        this.media = media;
     }
 }

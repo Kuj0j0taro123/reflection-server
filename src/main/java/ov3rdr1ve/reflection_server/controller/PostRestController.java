@@ -1,27 +1,58 @@
 package ov3rdr1ve.reflection_server.controller;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.actions.CreatePostRequest;
 import ov3rdr1ve.reflection_server.dto.actions.LikeRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.service.PostService;
+import ov3rdr1ve.reflection_server.service.StorageService;
 
+import java.io.IOException;
+import java.lang.reflect.InaccessibleObjectException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
 public class PostRestController {
-    private PostService postService;
+    private final PostService postService;
+    private final StorageService storageService;
+
+
+    //todo: define path in environment variable or application.properties later
+//    @Value("${reflection.media.storage}")
+//    private String uploadDirPath;
+    private Path uploadDir;
 
     @Autowired
-    public PostRestController(PostService postService) {
+    public PostRestController(PostService postService, StorageService storageService, @Value("${reflection.media.storage}") String uploadDirPath) {
         this.postService = postService;
+        this.storageService = storageService;
+        this.uploadDir = Paths.get(uploadDirPath);
+    }
+
+    @PostConstruct
+    public void init() throws IOException {
+        if (Files.notExists(uploadDir))
+            Files.createDirectories(uploadDir);
     }
 
     @GetMapping("/post/{postId}")
@@ -53,18 +84,25 @@ public class PostRestController {
         return postService.findTimelineFeed(auth.getName());
     }
 
-    @PostMapping("/posts")
-    public ResponseEntity<?> createPost(@RequestBody CreatePostRequest createPostRequest, Authentication auth){
-        if (createPostRequest.getText().isEmpty())
-            return new ResponseEntity<>(new Response("Empty post text."), HttpStatus.BAD_REQUEST);
-        if (createPostRequest.getText().length() > 300)
-            return new ResponseEntity<>(new Response("Post text is too long."), HttpStatus.BAD_REQUEST);
+    @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createPost(
+            @RequestPart("text") String text,
+            @RequestPart(value = "image", required = false) MultipartFile image
+            ){
 
-        String username = auth.getName();
-        postService.createPost(username, createPostRequest.getText());
+        // validate post text
+        if (text == null || text.trim().isEmpty())
+            return new ResponseEntity<>(new Response("Bad Request - Empty post"), HttpStatus.BAD_REQUEST);
+        if(text.length() > 300)
+            return new ResponseEntity<>(new Response("Bad Request - Post text is too long."), HttpStatus.BAD_REQUEST);
+
+        //todo: try/catch here and return appropriate http code depending on the situation
+        String imageUrl = storageService.storeImage(image);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        postService.createPost(username, text, imageUrl);
 
         return new ResponseEntity<>(new Response("Post created successfully"), HttpStatus.CREATED);
-
     }
 
     @GetMapping("/posts/search")

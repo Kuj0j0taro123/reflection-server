@@ -8,8 +8,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
+import ov3rdr1ve.reflection_server.entity.Media;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
+import ov3rdr1ve.reflection_server.repository.MediaRepository;
 import ov3rdr1ve.reflection_server.repository.PostRepository;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
@@ -20,11 +22,13 @@ public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final MediaRepository mediaRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository){
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, MediaRepository mediaRepository){
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.mediaRepository = mediaRepository;
     }
 
     @Override
@@ -38,6 +42,8 @@ public class PostServiceImpl implements PostService{
         postDTO.setUserLikes(post.getUserLikes().size());
         postDTO.setCreatedOn(post.getCreatedOn());
         postDTO.setNumComments(post.getComments().size());
+        if (post.getMedia() != null)
+            postDTO.setMediaUrl(post.getMedia().getUrl());
 
         // check if post is liked by user
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
@@ -150,12 +156,26 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void createPost(String username, String postText) {
+    @Transactional
+    public void createPost(String username, String postText, String mediaUrl) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         Post post = new Post();
+        Media media = null;
+
         post.setAuthor(user);
         post.setText(postText);
+
+
+        if (mediaUrl != null && !mediaUrl.trim().isEmpty()){
+            media = new Media();
+            media.setPost(post);
+            media.setUrl(mediaUrl);
+            mediaRepository.save(media);
+        }
+
+        post.setMedia(media);
+
         post = postRepository.save(post);
 
         user.getPosts().add(post);

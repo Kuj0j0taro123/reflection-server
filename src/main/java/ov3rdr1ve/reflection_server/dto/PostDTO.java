@@ -14,6 +14,7 @@ public class PostDTO {
     private Instant createdOn;
     private boolean isLiked; // if the user requesting this post liked it
     private int numComments;
+    private String mediaUrl;
 
     public PostDTO() {
     }
@@ -81,5 +82,13 @@ public class PostDTO {
 
     public void setNumComments(int numComments) {
         this.numComments = numComments;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 }
