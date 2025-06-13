@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setNumFollowing(user.getFollowingList().size());
         userDTO.setNumPosts(user.getPosts().size());
         userDTO.setCreatedOn(user.getCreatedOn());
+        userDTO.setProfilePicture(user.getProfilePicture());
 
         User requester = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         userDTO.setFollowedByYou(user.getFollowersList().contains(requester));

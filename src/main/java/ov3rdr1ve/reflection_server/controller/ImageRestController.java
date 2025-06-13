@@ -2,6 +2,7 @@ package ov3rdr1ve.reflection_server.controller;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,11 @@ public class ImageRestController {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping(value = "/images/nopfp", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<Resource> serveDefaultPfp(){
+        Resource resource = new ClassPathResource("/static/nopfp.png");
+        return ResponseEntity.ok().body(resource);
     }
 }

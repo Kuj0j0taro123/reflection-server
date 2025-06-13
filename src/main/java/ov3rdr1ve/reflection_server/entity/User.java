@@ -29,6 +29,9 @@ public class User {
     @CreationTimestamp
     private Instant createdOn;
 
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
 
     @ElementCollection
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -166,5 +169,13 @@ public class User {
 
     public void setLikedComments(Set<Comment> likedComments) {
         this.likedComments = likedComments;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

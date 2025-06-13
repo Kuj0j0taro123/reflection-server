@@ -14,6 +14,7 @@ public class UserDTO {
     private Instant createdOn;
     private boolean isFollowingYou;
     private boolean isFollowedByYou;
+    private String profilePicture;
 
     public UserDTO() {
     }
@@ -90,5 +91,13 @@ public class UserDTO {
 
     public void setFollowedByYou(boolean followedByYou) {
         isFollowedByYou = followedByYou;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
