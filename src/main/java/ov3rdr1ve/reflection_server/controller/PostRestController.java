@@ -37,23 +37,12 @@ public class PostRestController {
     private final StorageService storageService;
 
 
-    //todo: define path in environment variable or application.properties later
-//    @Value("${reflection.media.storage}")
-//    private String uploadDirPath;
-    private Path uploadDir;
-
     @Autowired
-    public PostRestController(PostService postService, StorageService storageService, @Value("${reflection.media.storage}") String uploadDirPath) {
+    public PostRestController(PostService postService, StorageService storageService) {
         this.postService = postService;
         this.storageService = storageService;
-        this.uploadDir = Paths.get(uploadDirPath);
     }
 
-    @PostConstruct
-    public void init() throws IOException {
-        if (Files.notExists(uploadDir))
-            Files.createDirectories(uploadDir);
-    }
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<?> getById(@PathVariable int postId){

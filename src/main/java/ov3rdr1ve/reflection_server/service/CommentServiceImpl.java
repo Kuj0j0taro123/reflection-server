@@ -76,7 +76,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public List<CommentDTO> findByAuthorId(int authorId) {
         User author = userRepository.findById(authorId).orElseThrow();
-        Set<Comment> results = author.getComments();
+        List<Comment> results = commentRepository.findByAuthorOrderByCreatedOnDesc(author);
         ArrayList<CommentDTO> comments = new ArrayList<>();
 
         for (Comment result : results){

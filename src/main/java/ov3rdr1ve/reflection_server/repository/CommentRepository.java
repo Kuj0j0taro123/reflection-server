@@ -10,4 +10,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findByParentPost(Post post);
     List<Comment> findByAuthor(User user);
+    List<Comment> findByAuthorOrderByCreatedOnDesc(User author);
 }

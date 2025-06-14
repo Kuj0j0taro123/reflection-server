@@ -12,6 +12,7 @@ import java.util.Set;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findByAuthor(User author);
+    List<Post> findByAuthorOrderByCreatedOnDesc(User author);
     List<Post> findByTextContainingIgnoreCase(String searchTerm, Sort sort);
 
     @Query("SELECT e FROM Post e " +

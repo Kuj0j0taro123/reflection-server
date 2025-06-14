@@ -92,7 +92,7 @@ public class PostServiceImpl implements PostService{
 
         User user = result.get();
 
-        List<Post> foundPosts = postRepository.findByAuthor(user);
+        List<Post> foundPosts = postRepository.findByAuthorOrderByCreatedOnDesc(user);
         List<PostDTO> postDtos = new ArrayList<>();
 
         for (Post post : foundPosts){
