@@ -35,4 +35,10 @@ public class AuthController {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
         return new ResponseEntity<>(new Response("Login successful"), HttpStatus.OK);
     }
+
+    @PostMapping("logout")
+    public ResponseEntity<?> logout (HttpServletRequest request){
+        request.getSession().invalidate();
+        return new ResponseEntity<>(new Response("Successfully logged out"), HttpStatus.OK);
+    }
 }
