@@ -37,19 +37,20 @@ public class CommentRestController {
 
     @PostMapping("/comment")
     public ResponseEntity<?> postComment(@RequestBody CommentRequest req){
-        commentService.createComment(req.getId(), req.getText());
-        return new ResponseEntity<>(new Response("Comment posted successfully"), HttpStatus.OK);
+        CommentDTO createdComment = commentService.createComment(req.getId(), req.getText());
+        return new ResponseEntity<>(createdComment, HttpStatus.OK);
     }
 
     @PostMapping("/comment/like")
     public ResponseEntity<?> likeComment(@RequestBody LikeRequest req, Authentication auth){
         if (req.getAction() == 1){ // user like
-            commentService.likeComment(auth.getName(), req.getId());
-            return new ResponseEntity<>(new Response("Comment liked successfully"), HttpStatus.OK);
+            CommentDTO likedComment = commentService.likeComment(auth.getName(), req.getId());
+            return new ResponseEntity<>(likedComment, HttpStatus.OK);
         }
         if (req.getAction() == 0){ // user unlike
-            commentService.unlikeComment(auth.getName(), req.getId());
-            return new ResponseEntity<>(new Response("Comment unliked successfully"), HttpStatus.OK);
+            CommentDTO unlikedComment = commentService.unlikeComment(auth.getName(), req.getId());
+
+            return new ResponseEntity<>(unlikedComment, HttpStatus.OK);
         }
         // todo: add dislike functionality dislike
         return new ResponseEntity<>(new Response("Unknown action"), HttpStatus.BAD_REQUEST);

@@ -16,7 +16,9 @@ public interface UserService {
     public UserDTO findById(int id);
     public List<UserDTO> findUsersByUsername(String username);
 
-    public void followUser(String userRequesting, String userReceiving);
-    public void unfollowUser(String userRequesting, String userReceiving);
+
+    public UserDTO followUser(String userRequesting, String userReceiving);
+    public UserDTO unfollowUser(String userRequesting, String userReceiving);
+    public UserDTO changeUserDescription(String description);
 
 }

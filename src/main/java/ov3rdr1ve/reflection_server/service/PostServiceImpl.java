@@ -39,15 +39,29 @@ public class PostServiceImpl implements PostService{
         postDTO.setText(post.getText());
         postDTO.setAuthorId(post.getAuthor().getId());
         postDTO.setAuthorUsername(post.getAuthor().getUsername());
-        postDTO.setUserLikes(post.getUserLikes().size());
+
+        if (post.getUserLikes() != null){
+            postDTO.setUserLikes(post.getUserLikes().size());
+            // check if post is liked by user
+            User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+            postDTO.setLiked(post.getUserLikes().contains(user));
+        }
+        else{
+            postDTO.setUserLikes(0);
+            postDTO.setLiked(false);
+        }
+
         postDTO.setCreatedOn(post.getCreatedOn());
-        postDTO.setNumComments(post.getComments().size());
+
+        if (post.getComments() != null)
+            postDTO.setNumComments(post.getComments().size());
+        else
+            postDTO.setNumComments(0);
+
         if (post.getMedia() != null)
             postDTO.setMediaUrl(post.getMedia().getUrl());
 
-        // check if post is liked by user
-        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
-        postDTO.setLiked(post.getUserLikes().contains(user));
+
 
         return postDTO;
     }
@@ -157,7 +171,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public void createPost(String username, String postText, String mediaUrl) {
+    public PostDTO createPost(String username, String postText, String mediaUrl) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         Post post = new Post();
@@ -179,12 +193,13 @@ public class PostServiceImpl implements PostService{
         post = postRepository.save(post);
 
         user.getPosts().add(post);
-        //user = userRepository.save(user);
+
+        return convertToDto(post);
     }
 
     @Override
     @Transactional
-    public void likePost(String username, int postId) throws NoSuchElementException {
+    public PostDTO likePost(String username, int postId) throws NoSuchElementException {
         User user = userRepository.findByUsername(username).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
 
@@ -193,10 +208,12 @@ public class PostServiceImpl implements PostService{
 
         userRepository.save(user);
         postRepository.save(post);
+
+        return convertToDto(post);
     }
 
     @Override
-    public void unlikePost(String username, int postId) throws NoSuchElementException {
+    public PostDTO unlikePost(String username, int postId) throws NoSuchElementException {
         User user = userRepository.findByUsername(username).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
 
@@ -205,6 +222,8 @@ public class PostServiceImpl implements PostService{
 
         userRepository.save(user);
         postRepository.save(post);
+
+        return convertToDto(post);
     }
 
     @Override

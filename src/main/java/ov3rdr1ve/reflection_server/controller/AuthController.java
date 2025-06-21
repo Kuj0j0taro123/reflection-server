@@ -33,28 +33,6 @@ public class AuthController {
 
         HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-
         return new ResponseEntity<>(new Response("Login successful"), HttpStatus.OK);
     }
-
-//    @GetMapping("/whoami")
-//    public String whoami(Authentication auth){
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("You are logged in as ");
-//        sb.append(auth.getName());
-//        sb.append("\n");
-//        sb.append("You have the following authorities: ");
-//        sb.append(auth.getAuthorities());
-//        sb.append("\n");
-//        sb.append("You have the credentials: ");
-//        sb.append(auth.getCredentials());
-//        sb.append("\n");
-//        sb.append("Here are some details: ");
-//        sb.append(auth.getDetails());
-//        sb.append("\n");
-//        sb.append("Are you authenticated? ");
-//        sb.append(auth.isAuthenticated());
-//
-//        return sb.toString();
-//    }
 }

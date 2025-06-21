@@ -11,11 +11,8 @@ public interface CommentService {
 
     public List<CommentDTO> findByPostId(int postId);
     public List<CommentDTO> findByAuthorId(int authorId);
-    public void createComment(int id, String text);
-    public void likeComment(String username, int commentId);
-    public void unlikeComment(String username, int commentId);
+    public CommentDTO createComment(int id, String text);
+    public CommentDTO likeComment(String username, int commentId);
+    public CommentDTO unlikeComment(String username, int commentId);
     public void dislikeComment(String username, int commentId);
-    
-//    public CommentDTO findByAuthorId(int authorId);
-//    public CommentDTO findByAuthorUsername(String username);
 }

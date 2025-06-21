@@ -36,11 +36,17 @@ public class CommentServiceImpl implements CommentService{
         commentDTO.setAuthorUsername(comment.getAuthor().getUsername());
         commentDTO.setText(comment.getText());
         commentDTO.setCreatedOn(comment.getCreatedOn());
-        commentDTO.setUserLikes(comment.getUserLikes().size());
 
-        // check if comment is liked by user
-        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
-        commentDTO.setLiked(comment.getUserLikes().contains(user));
+        if (comment.getUserLikes() != null) {
+            commentDTO.setUserLikes(comment.getUserLikes().size());
+            // check if comment is liked by user
+            User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+            commentDTO.setLiked(comment.getUserLikes().contains(user));
+        }
+        else{
+            commentDTO.setUserLikes(0);
+            commentDTO.setLiked(false);
+        }
 
         return commentDTO;
     }
@@ -87,7 +93,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public void createComment(int id, String text) throws NoSuchElementException {
+    public CommentDTO createComment(int id, String text) throws NoSuchElementException {
         Comment comment = new Comment();
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow();
@@ -104,11 +110,13 @@ public class CommentServiceImpl implements CommentService{
         postRepository.save(post);
         userRepository.save(user);
 
+        return convertToDto(comment);
+
     }
 
     @Override
     @Transactional
-    public void likeComment(String username, int commentId) throws NoSuchElementException{
+    public CommentDTO likeComment(String username, int commentId) throws NoSuchElementException{
         User user = userRepository.findByUsername(username).orElseThrow();
         Comment comment = commentRepository.findById(commentId).orElseThrow();
 
@@ -118,10 +126,12 @@ public class CommentServiceImpl implements CommentService{
         userRepository.save(user);
         commentRepository.save(comment);
 
+        return convertToDto(comment);
+
     }
 
     @Override
-    public void unlikeComment(String username, int commentId) {
+    public CommentDTO unlikeComment(String username, int commentId) {
         User user = userRepository.findByUsername(username).orElseThrow();
         Comment comment = commentRepository.findById(commentId).orElseThrow();
 
@@ -130,6 +140,8 @@ public class CommentServiceImpl implements CommentService{
 
         userRepository.save(user);
         commentRepository.save(comment);
+
+        return convertToDto(comment);
     }
 
     @Override

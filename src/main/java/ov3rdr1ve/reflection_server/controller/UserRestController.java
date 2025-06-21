@@ -4,13 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ov3rdr1ve.reflection_server.dto.actions.ChangeProfileDescriptionRequest;
 import ov3rdr1ve.reflection_server.dto.actions.FollowUserRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
-import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.service.UserService;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -59,23 +58,36 @@ public class UserRestController {
     @PostMapping("/follow")
     public ResponseEntity<?> followUser(@RequestBody FollowUserRequest req, Authentication auth){
 
+        UserDTO userGettingFollowed = null;
+
         try{
             if(req.getAction() == 1) // follow request
-                userService.followUser(auth.getName(), req.getUsername());
+                userGettingFollowed = userService.followUser(auth.getName(), req.getUsername());
             else if(req.getAction() == 0) // unfollow request
-                userService.unfollowUser(auth.getName(), req.getUsername());
+                userGettingFollowed = userService.unfollowUser(auth.getName(), req.getUsername());
             else
                 return new ResponseEntity<>(new Response("Unknown action"), HttpStatus.BAD_REQUEST);
         } catch(NoSuchElementException ex){
             return new ResponseEntity<>(new Response("User not found"), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(new Response("Success"), HttpStatus.OK);
+        return new ResponseEntity<>(userGettingFollowed, HttpStatus.OK);
     }
 
     @GetMapping("/whoami")
     public ResponseEntity<?> whoAmI(Authentication auth){
         return new ResponseEntity<>(userService.findByUsername(auth.getName()), HttpStatus.OK);
 
+    }
+
+    @PostMapping("/user/description")
+    public ResponseEntity<?> changeAccountDescription(@RequestBody ChangeProfileDescriptionRequest req){
+        UserDTO res = null;
+        try {
+            res = userService.changeUserDescription(req.getDescription());
+        }catch (Exception ex){
+            return new ResponseEntity<>(new Response("Something went wrong"), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

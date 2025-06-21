@@ -1,34 +1,22 @@
 package ov3rdr1ve.reflection_server.controller;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
-import ov3rdr1ve.reflection_server.dto.actions.CreatePostRequest;
 import ov3rdr1ve.reflection_server.dto.actions.LikeRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.service.PostService;
 import ov3rdr1ve.reflection_server.service.StorageService;
 
-import java.io.IOException;
-import java.lang.reflect.InaccessibleObjectException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
+
 
 @RestController
 @RequestMapping("/api")
@@ -89,9 +77,9 @@ public class PostRestController {
         String imageUrl = storageService.storeImage(image);
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        postService.createPost(username, text, imageUrl);
+        PostDTO createdPost = postService.createPost(username, text, imageUrl);
 
-        return new ResponseEntity<>(new Response("Post created successfully"), HttpStatus.CREATED);
+        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
 
     @GetMapping("/posts/search")
@@ -112,12 +100,12 @@ public class PostRestController {
     @PostMapping("/post/like")
     public ResponseEntity<?> likePost(@RequestBody LikeRequest req, Authentication auth){
         if (req.getAction() == 1){ // user like
-            postService.likePost(auth.getName(), req.getId());
-            return new ResponseEntity<>(new Response("Post liked successfully"), HttpStatus.OK);
+            PostDTO likedPost = postService.likePost(auth.getName(), req.getId());
+            return new ResponseEntity<>(likedPost, HttpStatus.OK);
         }
         if (req.getAction() == 0){ // user unlike
-            postService.unlikePost(auth.getName(), req.getId());
-            return new ResponseEntity<>(new Response("Post unliked successfully"), HttpStatus.OK);
+            PostDTO unlikedPost = postService.unlikePost(auth.getName(), req.getId());
+            return new ResponseEntity<>(unlikedPost, HttpStatus.OK);
         }
         // todo: add dislike functionality dislike
         return new ResponseEntity<>(new Response("Unknown action"), HttpStatus.BAD_REQUEST);

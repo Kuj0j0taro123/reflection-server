@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void followUser(String userRequesting, String userReceiving) throws NoSuchElementException {
+    public UserDTO followUser(String userRequesting, String userReceiving) throws NoSuchElementException {
         User requester = userRepository.findByUsername(userRequesting).orElseThrow();
         User receiver = userRepository.findByUsername(userReceiving).orElseThrow();
 
@@ -98,11 +98,13 @@ public class UserServiceImpl implements UserService {
 
         userRepository.saveAll(List.of(requester, receiver));
 
+        return convertToDto(receiver);
+
     }
 
     @Override
     @Transactional
-    public void unfollowUser(String userRequesting, String userReceiving) throws NoSuchElementException {
+    public UserDTO unfollowUser(String userRequesting, String userReceiving) throws NoSuchElementException {
         User requester = userRepository.findByUsername(userRequesting).orElseThrow();
         User receiver = userRepository.findByUsername(userReceiving).orElseThrow();
 
@@ -110,5 +112,16 @@ public class UserServiceImpl implements UserService {
         receiver.getFollowersList().remove(requester);
 
         userRepository.saveAll(List.of(requester, receiver));
+
+        return convertToDto(receiver);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO changeUserDescription(String description) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        user.setDescription(description);
+        userRepository.save(user);
+        return convertToDto(user);
     }
 }

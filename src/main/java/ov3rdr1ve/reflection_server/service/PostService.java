@@ -19,8 +19,8 @@ public interface PostService {
     public List<PostDTO> findTimelineFeed(String username);
     public List<PostDTO> findLikedPosts();
     //public List<PostDTO> findByAuthorUsername(String username);
-    public void createPost(String username, String postText, String mediaUrl);
-    public void likePost(String username, int postId);
-    public void unlikePost(String username, int postId);
+    public PostDTO createPost(String username, String postText, String mediaUrl);
+    public PostDTO likePost(String username, int postId);
+    public PostDTO unlikePost(String username, int postId);
     public void dislikePost(String username, int postId);
 }
