@@ -1,13 +1,16 @@
 package ov3rdr1ve.reflection_server.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ov3rdr1ve.reflection_server.dto.actions.ChangeProfileDescriptionRequest;
 import ov3rdr1ve.reflection_server.dto.actions.FollowUserRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
+import ov3rdr1ve.reflection_server.service.StorageService;
 import ov3rdr1ve.reflection_server.service.UserService;
 
 import java.util.NoSuchElementException;
@@ -17,10 +20,12 @@ import java.util.NoSuchElementException;
 public class UserRestController {
 
     private UserService userService;
+    private StorageService storageService;
 
 
-    public UserRestController(UserService userService){
+    public UserRestController(UserService userService, StorageService storageService){
         this.userService = userService;
+        this.storageService = storageService;
     }
 
 
@@ -82,12 +87,20 @@ public class UserRestController {
 
     @PostMapping("/user/description")
     public ResponseEntity<?> changeAccountDescription(@RequestBody ChangeProfileDescriptionRequest req){
-        UserDTO res = null;
+        UserDTO response = null;
         try {
-            res = userService.changeUserDescription(req.getDescription());
+            response = userService.changeUserDescription(req.getDescription());
         }catch (Exception ex){
             return new ResponseEntity<>(new Response("Something went wrong"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/user/profile_picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> changeProfilePicture(@RequestPart(value = "image", required = true) MultipartFile image){
+        //todo: try/catch here and return appropriate http code depending on the situation
+        String imageUrl = storageService.storeImage(image);
+        UserDTO response = userService.changeProfilePicture(imageUrl);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

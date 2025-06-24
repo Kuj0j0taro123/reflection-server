@@ -124,4 +124,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return convertToDto(user);
     }
+
+    @Override
+    @Transactional
+    public UserDTO changeProfilePicture(String imageUrl) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        user.setProfilePicture(imageUrl);
+        userRepository.save(user);
+
+        return convertToDto(user);
+    }
 }

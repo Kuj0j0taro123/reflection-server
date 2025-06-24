@@ -20,5 +20,6 @@ public interface UserService {
     public UserDTO followUser(String userRequesting, String userReceiving);
     public UserDTO unfollowUser(String userRequesting, String userReceiving);
     public UserDTO changeUserDescription(String description);
+    public UserDTO changeProfilePicture(String imageUrl);
 
 }
