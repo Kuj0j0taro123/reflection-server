@@ -1,0 +1,33 @@
+package ov3rdr1ve.reflection_server.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ov3rdr1ve.reflection_server.dto.actions.ReportPostRequest;
+import ov3rdr1ve.reflection_server.dto.report.ReportedPostDTO;
+import ov3rdr1ve.reflection_server.service.ModeratorService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+public class ModerationRestController {
+
+    private final ModeratorService moderatorService;
+
+    public ModerationRestController(ModeratorService moderatorService){
+        this.moderatorService = moderatorService;
+    }
+
+    @GetMapping("/moderator/posts")
+    public List<ReportedPostDTO> getAllReportedPosts(){
+        return moderatorService.getAllReportedPosts();
+    }
+
+    @PostMapping("/report/post")
+    public ResponseEntity<?> reportPost(@RequestBody ReportPostRequest req){
+        //todo
+        return new ResponseEntity<>(moderatorService.reportPost(req), HttpStatus.OK);
+    }
+
+}

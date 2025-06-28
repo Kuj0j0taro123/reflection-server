@@ -39,7 +39,8 @@ public class SampleDataLoader implements CommandLineRunner {
         alice.setUsername("alice01");
         alice.setPassword(passwordEncoder.encode("1234"));
         alice.setDescription("Hello, I am alice01.");
-        alice.setRoles(roles);
+//        // alice is a moderator
+        alice.setRoles(List.of("USER", "MODERATOR"));
         userRepository.save(alice);
 
         User bob = new User();
