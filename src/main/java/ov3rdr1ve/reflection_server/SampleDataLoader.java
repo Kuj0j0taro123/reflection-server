@@ -94,6 +94,14 @@ public class SampleDataLoader implements CommandLineRunner {
         lurker.setRoles(roles);
         userRepository.save(lurker);
 
+        User bannedUser = new User();
+        bannedUser.setUsername("banned_user");
+        bannedUser.setPassword(passwordEncoder.encode("1234"));
+        bannedUser.setDescription("i am banned");
+        bannedUser.setRoles(List.of("BANNED"));
+        userRepository.save(bannedUser);
+
+
         Post post3 = new Post();
         post3.setText("This is another sample post.");
         post3.setAuthor(charlie);

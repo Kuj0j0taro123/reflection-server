@@ -3,14 +3,19 @@ package ov3rdr1ve.reflection_server.service;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ov3rdr1ve.reflection_server.dto.actions.ReportCommentRequest;
 import ov3rdr1ve.reflection_server.dto.actions.ReportPostRequest;
+import ov3rdr1ve.reflection_server.dto.actions.ReportUserRequest;
+import ov3rdr1ve.reflection_server.dto.report.ReportedCommentDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedPostDTO;
+import ov3rdr1ve.reflection_server.dto.report.ReportedUserDTO;
+import ov3rdr1ve.reflection_server.entity.Comment;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
+import ov3rdr1ve.reflection_server.entity.report.ReportedComment;
 import ov3rdr1ve.reflection_server.entity.report.ReportedPost;
-import ov3rdr1ve.reflection_server.repository.PostRepository;
-import ov3rdr1ve.reflection_server.repository.ReportedPostRepository;
-import ov3rdr1ve.reflection_server.repository.UserRepository;
+import ov3rdr1ve.reflection_server.entity.report.ReportedUser;
+import ov3rdr1ve.reflection_server.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +24,27 @@ import java.util.List;
 public class ModeratorServiceImpl implements ModeratorService {
 
     private final ReportedPostRepository reportedPostRepository;
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final ReportedUserRepository reportedUserRepository;
+    private final UserRepository userRepository;
+    private final ReportedCommentRepository reportedCommentRepository;
+    private final CommentRepository commentRepository;
+
 
     public ModeratorServiceImpl(ReportedPostRepository reportedPostRepository,
+                                PostRepository postRepository,
+                                ReportedUserRepository reportedUserRepository,
                                 UserRepository userRepository,
-                                PostRepository postRepository) {
+                                ReportedCommentRepository reportedCommentRepository,
+                                CommentRepository commentRepository
+                                ) {
         this.reportedPostRepository = reportedPostRepository;
-        this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.reportedUserRepository = reportedUserRepository;
+        this.userRepository = userRepository;
+        this.reportedCommentRepository = reportedCommentRepository;
+        this.commentRepository = commentRepository;
+
     }
 
     @Override
@@ -44,6 +61,38 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Override
     public ReportedPost convertRepPostToEntity(ReportedPostDTO reportedPostDTO) {
         return reportedPostRepository.findById(reportedPostDTO.getId()).orElseThrow();
+    }
+
+    @Override
+    public ReportedUserDTO convertRepUserToDto(ReportedUser reportedUser) {
+        ReportedUserDTO reportedUserDTO = new ReportedUserDTO();
+        reportedUserDTO.setId(reportedUser.getId());
+        reportedUserDTO.setSubmitterId(reportedUser.getSubmitter().getId());
+        reportedUserDTO.setUserId(reportedUser.getReportedUser().getId());
+        reportedUserDTO.setReason(reportedUser.getReason());
+        reportedUserDTO.setReportedOn(reportedUser.getCreatedOn());
+        return reportedUserDTO;
+    }
+
+    @Override
+    public ReportedUser convertRepUserToEntity(ReportedUserDTO reportedUserDTO) {
+        return reportedUserRepository.findById(reportedUserDTO.getId()).orElseThrow();
+    }
+
+    @Override
+    public ReportedCommentDTO convertRepCommentToDto(ReportedComment reportedComment) {
+        ReportedCommentDTO reportedCommentDTO = new ReportedCommentDTO();
+        reportedCommentDTO.setId(reportedComment.getId());
+        reportedCommentDTO.setSubmitterId(reportedComment.getSubmitter().getId());
+        reportedCommentDTO.setCommentId(reportedComment.getReportedComment().getId());
+        reportedCommentDTO.setReason(reportedComment.getReason());
+        reportedCommentDTO.setReportedOn(reportedComment.getCreatedOn());
+        return reportedCommentDTO;
+    }
+
+    @Override
+    public ReportedComment convertRepCommentToEntity(ReportedCommentDTO reportedCommentDTO) {
+        return reportedCommentRepository.findById(reportedCommentDTO.getId()).orElseThrow();
     }
 
     @Override
@@ -70,5 +119,57 @@ public class ModeratorServiceImpl implements ModeratorService {
         report.setReason(request.getReason()); //todo: make sure reason isn't empty
         report = reportedPostRepository.save(report);
         return convertRepPostToDto(report);
+    }
+
+    @Override
+    public List<ReportedUserDTO> getAllReportedUsers() {
+        List<ReportedUser> results = reportedUserRepository.findAll();
+
+        ArrayList<ReportedUserDTO> reportedUsers = new ArrayList<>();
+
+        for (ReportedUser result : results){
+            reportedUsers.add(convertRepUserToDto(result));
+        }
+
+        return reportedUsers;
+    }
+
+    @Override
+    @Transactional
+    public ReportedUserDTO reportUser(ReportUserRequest request) {
+        User submitter = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        User userGettingReported = userRepository.findById(request.getUserId()).orElseThrow();
+
+        ReportedUser report = new ReportedUser();
+        report.setReportedUser(userGettingReported);
+        report.setSubmitter(submitter);
+        report.setReason(request.getReason());
+        report = reportedUserRepository.save(report);
+        return convertRepUserToDto(report);
+    }
+
+    @Override
+    public List<ReportedCommentDTO> getAllReportedComments() {
+        List<ReportedComment> results = reportedCommentRepository.findAll();
+
+        ArrayList<ReportedCommentDTO> reportedComments = new ArrayList<>();
+
+        for (ReportedComment result : results){
+            reportedComments.add(convertRepCommentToDto(result));
+        }
+        return reportedComments;
+    }
+
+    @Override
+    public ReportedCommentDTO reportComment(ReportCommentRequest request) {
+        User submitter = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+        Comment commentGettingReported = commentRepository.findById(request.getCommentId()).orElseThrow();
+
+        ReportedComment report = new ReportedComment();
+        report.setReportedComment(commentGettingReported);
+        report.setSubmitter(submitter);
+        report.setReason(request.getReason());
+        report = reportedCommentRepository.save(report);
+        return convertRepCommentToDto(report);
     }
 }
