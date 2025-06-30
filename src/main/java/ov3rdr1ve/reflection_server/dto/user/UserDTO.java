@@ -15,6 +15,8 @@ public class UserDTO {
     private boolean isFollowingYou;
     private boolean isFollowedByYou;
     private String profilePicture;
+    private boolean isBanned;
+    private boolean isModerator;
 
     public UserDTO() {
     }
@@ -99,5 +101,23 @@ public class UserDTO {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    @JsonProperty(value="isBanned")
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
+    }
+
+    @JsonProperty(value="isModerator")
+    public boolean isModerator() {
+        return isModerator;
+    }
+
+    public void setModerator(boolean moderator) {
+        isModerator = moderator;
     }
 }

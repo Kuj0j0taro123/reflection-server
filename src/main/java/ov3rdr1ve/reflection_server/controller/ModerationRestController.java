@@ -3,6 +3,7 @@ package ov3rdr1ve.reflection_server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ov3rdr1ve.reflection_server.dto.actions.BanUserRequest;
 import ov3rdr1ve.reflection_server.dto.actions.ReportCommentRequest;
 import ov3rdr1ve.reflection_server.dto.actions.ReportPostRequest;
 import ov3rdr1ve.reflection_server.dto.actions.ReportUserRequest;
@@ -44,14 +45,19 @@ public class ModerationRestController {
         return new ResponseEntity<>(moderatorService.reportUser(req), HttpStatus.OK);
     }
 
-    @GetMapping("moderator/comments")
+    @GetMapping("/moderator/comments")
     public List<ReportedCommentDTO> getAllReportedComments(){
         return moderatorService.getAllReportedComments();
     }
 
-    @PostMapping("report/comment")
+    @PostMapping("/report/comment")
     public ResponseEntity<?> reportComment(@RequestBody ReportCommentRequest req){
         return new ResponseEntity<>(moderatorService.reportComment(req), HttpStatus.OK);
+    }
+
+    @PostMapping("/moderator/ban")
+    public ResponseEntity<?> banUser(@RequestBody BanUserRequest req){
+        return new ResponseEntity<>(moderatorService.banUser(req), HttpStatus.OK);
     }
 
 }

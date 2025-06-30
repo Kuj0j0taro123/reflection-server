@@ -72,7 +72,10 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments; // comments made by THIS USER
 
+    private boolean isBanned;
+
     public User() {
+        this.isBanned = false;
     }
 
     public int getId() {
@@ -177,5 +180,13 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
     }
 }

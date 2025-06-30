@@ -13,27 +13,40 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.web.bind.annotation.*;
 import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
+import ov3rdr1ve.reflection_server.dto.user.UserDTO;
+import ov3rdr1ve.reflection_server.entity.User;
+import ov3rdr1ve.reflection_server.service.UserService;
 
 @RestController
 @RequestMapping("/api")
 public class AuthController {
 
     private final AuthenticationManager authManager;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authManager){
+    public AuthController(AuthenticationManager authManager, UserService userService){
         this.authManager = authManager;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest creds, HttpServletRequest request){
+        //todo: optimize this function later
         Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(creds.getUsername(), creds.getPassword()));
+
 
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
 
-        HttpSession session = request.getSession(true);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
-        return new ResponseEntity<>(new Response("Login successful"), HttpStatus.OK);
+        UserDTO userDTO = userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        // check if the user is banned
+        if (!userDTO.isBanned()){
+            HttpSession session = request.getSession(true);
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, sc);
+        }
+
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @PostMapping("logout")

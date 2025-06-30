@@ -31,6 +31,8 @@ public class UserServiceImpl implements UserService {
         userDTO.setNumPosts(user.getPosts().size());
         userDTO.setCreatedOn(user.getCreatedOn());
         userDTO.setProfilePicture(user.getProfilePicture());
+        userDTO.setBanned(user.isBanned());
+        userDTO.setModerator(user.getRoles().contains("MODERATOR"));
 
         User requester = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
         userDTO.setFollowedByYou(user.getFollowersList().contains(requester));

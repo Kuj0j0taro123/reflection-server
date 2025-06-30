@@ -99,6 +99,7 @@ public class SampleDataLoader implements CommandLineRunner {
         bannedUser.setPassword(passwordEncoder.encode("1234"));
         bannedUser.setDescription("i am banned");
         bannedUser.setRoles(List.of("BANNED"));
+        bannedUser.setBanned(true);
         userRepository.save(bannedUser);
 
 
