@@ -3,9 +3,6 @@ package ov3rdr1ve.reflection_server.service;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.actions.BanUserRequest;
 import ov3rdr1ve.reflection_server.dto.actions.ReportCommentRequest;
@@ -14,13 +11,13 @@ import ov3rdr1ve.reflection_server.dto.actions.ReportUserRequest;
 import ov3rdr1ve.reflection_server.dto.report.ReportedCommentDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedPostDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedUserDTO;
-import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.Comment;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
-import ov3rdr1ve.reflection_server.entity.report.ReportedComment;
-import ov3rdr1ve.reflection_server.entity.report.ReportedPost;
-import ov3rdr1ve.reflection_server.entity.report.ReportedUser;
+import ov3rdr1ve.reflection_server.entity.moderation.logs.BanLog;
+import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedComment;
+import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedPost;
+import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedUser;
 import ov3rdr1ve.reflection_server.repository.*;
 import ov3rdr1ve.reflection_server.security.HttpSessionTracker;
 
@@ -37,6 +34,7 @@ public class ModeratorServiceImpl implements ModeratorService {
     private final UserRepository userRepository;
     private final ReportedCommentRepository reportedCommentRepository;
     private final CommentRepository commentRepository;
+    private final BanLogRepository banLogRepository;
 
 
     public ModeratorServiceImpl(ReportedPostRepository reportedPostRepository,
@@ -45,7 +43,8 @@ public class ModeratorServiceImpl implements ModeratorService {
                                 UserRepository userRepository,
                                 ReportedCommentRepository reportedCommentRepository,
                                 CommentRepository commentRepository,
-                                HttpSessionTracker sessionTracker
+                                HttpSessionTracker sessionTracker,
+                                BanLogRepository banLogRepository
                                 ) {
         this.reportedPostRepository = reportedPostRepository;
         this.postRepository = postRepository;
@@ -54,6 +53,7 @@ public class ModeratorServiceImpl implements ModeratorService {
         this.reportedCommentRepository = reportedCommentRepository;
         this.commentRepository = commentRepository;
         this.sessionTracker = sessionTracker;
+        this.banLogRepository = banLogRepository;
     }
 
     @Override
@@ -186,12 +186,19 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Transactional
     public boolean banUser(BanUserRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
 
         // cant ban a mod
         if (user.getRoles().contains("MODERATOR"))
             return false;
 
         user.setBanned(true);
+
+        BanLog banLog = new BanLog();
+        banLog.setUser(user);
+        banLog.setModerator(moderator);
+        banLogRepository.save(banLog);
+
 
         userRepository.save(user);
 

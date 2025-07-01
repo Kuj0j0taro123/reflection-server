@@ -1,15 +1,16 @@
-package ov3rdr1ve.reflection_server.entity.report;
+package ov3rdr1ve.reflection_server.entity.moderation.reports;
+
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import ov3rdr1ve.reflection_server.entity.Comment;
+import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
 
 import java.time.Instant;
 
 @Entity
-@Table(name = "reported_comment")
-public class ReportedComment {
+@Table(name = "reported_post")
+public class ReportedPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +21,15 @@ public class ReportedComment {
     private User submitter;
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private Comment reportedComment;
+    @JoinColumn(name = "post_id")
+    private Post reportedPost;
 
     private String reason;
 
     @CreationTimestamp
     private Instant createdOn;
 
-    public ReportedComment() {
+    public ReportedPost() {
     }
 
     public int getId() {
@@ -47,12 +48,12 @@ public class ReportedComment {
         this.submitter = submitter;
     }
 
-    public Comment getReportedComment() {
-        return reportedComment;
+    public Post getReportedPost() {
+        return reportedPost;
     }
 
-    public void setReportedComment(Comment reportedComment) {
-        this.reportedComment = reportedComment;
+    public void setReportedPost(Post reportedPost) {
+        this.reportedPost = reportedPost;
     }
 
     public String getReason() {
@@ -71,3 +72,4 @@ public class ReportedComment {
         this.createdOn = createdOn;
     }
 }
+

@@ -7,10 +7,9 @@ import ov3rdr1ve.reflection_server.dto.actions.ReportUserRequest;
 import ov3rdr1ve.reflection_server.dto.report.ReportedCommentDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedPostDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedUserDTO;
-import ov3rdr1ve.reflection_server.dto.user.UserDTO;
-import ov3rdr1ve.reflection_server.entity.report.ReportedComment;
-import ov3rdr1ve.reflection_server.entity.report.ReportedPost;
-import ov3rdr1ve.reflection_server.entity.report.ReportedUser;
+import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedComment;
+import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedPost;
+import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedUser;
 
 import java.util.List;
 
