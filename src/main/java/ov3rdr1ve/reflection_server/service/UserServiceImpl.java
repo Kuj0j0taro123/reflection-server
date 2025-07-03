@@ -5,8 +5,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
+import ov3rdr1ve.reflection_server.entity.Notification;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
+import ov3rdr1ve.reflection_server.repository.NotificationRepository;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
 
 import java.util.*;
@@ -15,9 +17,12 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+    private NotificationRepository notificationRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+
+    public UserServiceImpl(UserRepository userRepository, NotificationRepository notificationRepository) {
         this.userRepository = userRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
@@ -98,6 +103,15 @@ public class UserServiceImpl implements UserService {
         requester.getFollowingList().add(receiver);
         receiver.getFollowersList().add(requester);
 
+
+
+        Notification notification = new Notification();
+        notification.setReceiver(receiver);
+        notification.setSender(requester);
+        notification.setMessage(requester.getUsername() + " followed you.");
+        receiver.getReceivedNotifications().add(notification);
+
+        notificationRepository.save(notification);
         userRepository.saveAll(List.of(requester, receiver));
 
         return convertToDto(receiver);

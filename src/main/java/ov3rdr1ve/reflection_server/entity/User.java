@@ -72,6 +72,9 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments; // comments made by THIS USER
 
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> receivedNotifications;
+
     private boolean isBanned;
 
     public User() {
@@ -188,5 +191,13 @@ public class User {
 
     public void setBanned(boolean banned) {
         isBanned = banned;
+    }
+
+    public Set<Notification> getReceivedNotifications() {
+        return receivedNotifications;
+    }
+
+    public void setReceivedNotifications(Set<Notification> receivedNotifications) {
+        this.receivedNotifications = receivedNotifications;
     }
 }
