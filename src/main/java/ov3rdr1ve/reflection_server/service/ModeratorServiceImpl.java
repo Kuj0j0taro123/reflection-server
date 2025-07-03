@@ -15,6 +15,7 @@ import ov3rdr1ve.reflection_server.entity.Comment;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.entity.moderation.logs.BanLog;
+import ov3rdr1ve.reflection_server.entity.moderation.logs.UnbanLog;
 import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedComment;
 import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedPost;
 import ov3rdr1ve.reflection_server.entity.moderation.reports.ReportedUser;
@@ -35,6 +36,7 @@ public class ModeratorServiceImpl implements ModeratorService {
     private final ReportedCommentRepository reportedCommentRepository;
     private final CommentRepository commentRepository;
     private final BanLogRepository banLogRepository;
+    private final UnbanLogRepository unbanLogRepository;
 
 
     public ModeratorServiceImpl(ReportedPostRepository reportedPostRepository,
@@ -44,7 +46,8 @@ public class ModeratorServiceImpl implements ModeratorService {
                                 ReportedCommentRepository reportedCommentRepository,
                                 CommentRepository commentRepository,
                                 HttpSessionTracker sessionTracker,
-                                BanLogRepository banLogRepository
+                                BanLogRepository banLogRepository,
+                                UnbanLogRepository unbanLogRepository
                                 ) {
         this.reportedPostRepository = reportedPostRepository;
         this.postRepository = postRepository;
@@ -54,6 +57,7 @@ public class ModeratorServiceImpl implements ModeratorService {
         this.commentRepository = commentRepository;
         this.sessionTracker = sessionTracker;
         this.banLogRepository = banLogRepository;
+        this.unbanLogRepository = unbanLogRepository;
     }
 
     @Override
@@ -185,19 +189,23 @@ public class ModeratorServiceImpl implements ModeratorService {
     @Override
     @Transactional
     public boolean banUser(BanUserRequest request) {
+        // todo: try catch here
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
 
         // cant ban a mod
         if (user.getRoles().contains("MODERATOR"))
             return false;
+        // if the user is already banned, just exit
+        if (user.isBanned())
+            return true;
 
         user.setBanned(true);
 
-        BanLog banLog = new BanLog();
-        banLog.setUser(user);
-        banLog.setModerator(moderator);
-        banLogRepository.save(banLog);
+        BanLog logEntry = new BanLog();
+        logEntry.setUser(user);
+        logEntry.setModerator(moderator);
+        banLogRepository.save(logEntry);
 
 
         userRepository.save(user);
@@ -212,6 +220,31 @@ public class ModeratorServiceImpl implements ModeratorService {
         }
 
         return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean unbanUser(BanUserRequest request) {
+        // todo: try catch here
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+
+        if (!user.isBanned())
+            return true;
+
+
+        UnbanLog logEntry = new UnbanLog();
+        logEntry.setUser(user);
+        logEntry.setModerator(moderator);
+        unbanLogRepository.save(logEntry);
+
+
+
+        user.setBanned(false);
+        userRepository.save(user);
+
+        return true;
+
     }
 
 }

@@ -31,6 +31,7 @@ public interface ModeratorService {
     public ReportedCommentDTO reportComment(ReportCommentRequest request);
 
     public boolean banUser(BanUserRequest request);
+    public boolean unbanUser(BanUserRequest request);
 
 
 }

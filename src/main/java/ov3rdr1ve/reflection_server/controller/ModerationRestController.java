@@ -60,4 +60,9 @@ public class ModerationRestController {
         return new ResponseEntity<>(moderatorService.banUser(req), HttpStatus.OK);
     }
 
+    @PostMapping("/moderator/unban")
+    public ResponseEntity<?> unbanUser(@RequestBody BanUserRequest req){
+        return new ResponseEntity<>(moderatorService.unbanUser(req), HttpStatus.OK);
+    }
+
 }
