@@ -65,6 +65,8 @@ public class PostServiceImpl implements PostService{
             postDTO.setViews(post.getViews().size());
         }
 
+        postDTO.setAuthorProfilePicture(post.getAuthor().getProfilePicture());
+
 
 
         return postDTO;

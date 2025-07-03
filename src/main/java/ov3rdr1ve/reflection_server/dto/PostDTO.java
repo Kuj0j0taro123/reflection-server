@@ -8,6 +8,7 @@ import java.time.Instant;
 public class PostDTO {
     private int id;
     private String authorUsername;
+    private String authorProfilePicture;
     private String text;
     private int views;
     private int userLikes;
@@ -99,5 +100,13 @@ public class PostDTO {
 
     public void setViews(int views) {
         this.views = views;
+    }
+
+    public String getAuthorProfilePicture() {
+        return authorProfilePicture;
+    }
+
+    public void setAuthorProfilePicture(String authorProfilePicture) {
+        this.authorProfilePicture = authorProfilePicture;
     }
 }
