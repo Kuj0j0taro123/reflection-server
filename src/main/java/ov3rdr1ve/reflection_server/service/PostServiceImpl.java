@@ -61,6 +61,10 @@ public class PostServiceImpl implements PostService{
         if (post.getMedia() != null)
             postDTO.setMediaUrl(post.getMedia().getUrl());
 
+        if (post.getViews() != null){
+            postDTO.setViews(post.getViews().size());
+        }
+
 
 
         return postDTO;
@@ -90,7 +94,12 @@ public class PostServiceImpl implements PostService{
     public PostDTO findById(int id) {
         Optional<Post> result = postRepository.findById(id);
         if (result.isPresent()){
-            return convertToDto(result.get());
+            // this will cause problems if the app does not enforce users logging in
+            User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+            Post post = result.get();
+            // views is a set, so this should be fine
+            post.getViews().add(user);
+            return convertToDto(post);
         }
 
         return null;

@@ -22,6 +22,15 @@ public class Post {
     @ManyToMany(mappedBy = "likedPosts", fetch = FetchType.LAZY)
     private Set<User> userLikes;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_views",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "viewed_user_id")
+    )
+    private Set<User> views;
+
+
     @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
@@ -93,5 +102,13 @@ public class Post {
 
     public void setMedia(Media media) {
         this.media = media;
+    }
+
+    public Set<User> getViews() {
+        return views;
+    }
+
+    public void setViews(Set<User> views) {
+        this.views = views;
     }
 }

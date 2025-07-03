@@ -9,6 +9,7 @@ public class PostDTO {
     private int id;
     private String authorUsername;
     private String text;
+    private int views;
     private int userLikes;
     private int authorId;
     private Instant createdOn;
@@ -90,5 +91,13 @@ public class PostDTO {
 
     public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 }
