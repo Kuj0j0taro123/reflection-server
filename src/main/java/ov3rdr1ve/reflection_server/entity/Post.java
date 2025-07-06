@@ -25,8 +25,8 @@ public class Post {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_views",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "viewed_user_id")
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> views;
 

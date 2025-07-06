@@ -49,7 +49,7 @@ public class AuthController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @PostMapping("logout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logout (HttpServletRequest request){
         request.getSession().invalidate();
         return new ResponseEntity<>(new Response("Successfully logged out"), HttpStatus.OK);
