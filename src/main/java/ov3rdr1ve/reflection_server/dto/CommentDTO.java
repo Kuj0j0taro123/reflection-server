@@ -14,6 +14,7 @@ public class CommentDTO {
     private Instant createdOn;
     private boolean isLiked;
     private int userLikes;
+    private String authorProfilePicture;
 
     public CommentDTO() {
     }
@@ -82,5 +83,13 @@ public class CommentDTO {
 
     public void setUserLikes(int userLikes) {
         this.userLikes = userLikes;
+    }
+
+    public String getAuthorProfilePicture() {
+        return authorProfilePicture;
+    }
+
+    public void setAuthorProfilePicture(String authorProfilePicture) {
+        this.authorProfilePicture = authorProfilePicture;
     }
 }

@@ -36,6 +36,7 @@ public class CommentServiceImpl implements CommentService{
         commentDTO.setAuthorUsername(comment.getAuthor().getUsername());
         commentDTO.setText(comment.getText());
         commentDTO.setCreatedOn(comment.getCreatedOn());
+        commentDTO.setAuthorProfilePicture(comment.getAuthor().getProfilePicture());
 
         if (comment.getUserLikes() != null) {
             commentDTO.setUserLikes(comment.getUserLikes().size());
