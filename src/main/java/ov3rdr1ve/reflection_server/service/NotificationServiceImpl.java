@@ -11,7 +11,6 @@ import ov3rdr1ve.reflection_server.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
@@ -29,6 +28,7 @@ public class NotificationServiceImpl implements NotificationService{
         NotificationDTO notificationDTO = new NotificationDTO();
         notificationDTO.setId(notification.getId());
         notificationDTO.setMessage(notification.getMessage());
+        notificationDTO.setCreatedOn(notification.getCreatedOn());
         return notificationDTO;
     }
 
