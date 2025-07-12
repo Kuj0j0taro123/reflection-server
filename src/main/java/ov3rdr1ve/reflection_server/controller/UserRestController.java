@@ -4,15 +4,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ov3rdr1ve.reflection_server.dto.NotificationDTO;
 import ov3rdr1ve.reflection_server.dto.actions.ChangeProfileDescriptionRequest;
 import ov3rdr1ve.reflection_server.dto.actions.FollowUserRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
+import ov3rdr1ve.reflection_server.entity.User;
+import ov3rdr1ve.reflection_server.service.NotificationService;
 import ov3rdr1ve.reflection_server.service.StorageService;
 import ov3rdr1ve.reflection_server.service.UserService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -21,11 +26,15 @@ public class UserRestController {
 
     private UserService userService;
     private StorageService storageService;
+    private NotificationService notificationService;
 
 
-    public UserRestController(UserService userService, StorageService storageService){
+    public UserRestController(UserService userService,
+                              StorageService storageService,
+                              NotificationService notificationService){
         this.userService = userService;
         this.storageService = storageService;
+        this.notificationService = notificationService;
     }
 
 
@@ -64,6 +73,8 @@ public class UserRestController {
     public ResponseEntity<?> followUser(@RequestBody FollowUserRequest req, Authentication auth){
 
         UserDTO userGettingFollowed = null;
+        if (req.getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+            return new ResponseEntity<>(new Response("You can't follow yourself!"), HttpStatus.BAD_REQUEST);
 
         try{
             if(req.getAction() == 1) // follow request
@@ -102,5 +113,11 @@ public class UserRestController {
         String imageUrl = storageService.storeImage(image);
         UserDTO response = userService.changeProfilePicture(imageUrl);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/notifications")
+    public List<NotificationDTO> getNotifications(){
+        //todo: use the notification service you just added as a bean to this controller
+        return notificationService.getAllUserNotifications();
     }
 }
