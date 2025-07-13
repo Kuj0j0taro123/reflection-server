@@ -153,7 +153,11 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public boolean deleteComment(int commentId) {
-        return false;
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        boolean ret = user.getComments().removeIf(n -> n.getId() == commentId);
+        userRepository.save(user);
+        return ret;
     }
 
     @Override

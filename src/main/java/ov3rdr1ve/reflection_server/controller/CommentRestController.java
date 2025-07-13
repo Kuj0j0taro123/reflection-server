@@ -56,4 +56,12 @@ public class CommentRestController {
         return new ResponseEntity<>(new Response("Unknown action"), HttpStatus.BAD_REQUEST);
 
     }
+
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable int commentId){
+        if (commentService.deleteComment(commentId))
+            return new ResponseEntity<>(new Response("Comment successfully deleted."), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(new Response("Bad comment deletion request"), HttpStatus.BAD_REQUEST);
+    }
 }
