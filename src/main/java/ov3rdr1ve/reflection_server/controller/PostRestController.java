@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.actions.LikeRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
+import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.service.PostService;
 import ov3rdr1ve.reflection_server.service.StorageService;
 
@@ -123,6 +124,12 @@ public class PostRestController {
             return new ResponseEntity<>(new Response("Post successfully deleted."), HttpStatus.OK);
         else
             return new ResponseEntity<>(new Response("Bad post deletion request"), HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/posts")
+    public ResponseEntity<?> deleteAllPosts(){
+        postService.deleteAllPosts();
+        return new ResponseEntity<>(new Response("All posts deleted successfully."), HttpStatus.OK);
     }
 
 //    @GetMapping("/posts/name/{authorUsername}")

@@ -266,6 +266,14 @@ public class PostServiceImpl implements PostService{
         return ret;
     }
 
+    @Override
+    public void deleteAllPosts() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        user.getPosts().clear();
+        userRepository.save(user);
+    }
+
 
 //    @Override
 //    public List<PostDTO> findByAuthorUsername(String username) {

@@ -24,6 +24,7 @@ public interface PostService {
     public PostDTO unlikePost(String username, int postId);
     public void dislikePost(String username, int postId);
     public boolean deletePost(int postId);
+    public void deleteAllPosts(); // deletes all posts for the authenticated user
 
     // moderator methods below
     public PostDTO removePost(int postId);
