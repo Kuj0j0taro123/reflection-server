@@ -15,6 +15,7 @@ public class CommentDTO {
     private boolean isLiked;
     private int userLikes;
     private String authorProfilePicture;
+    private boolean removedByModerator;
 
     public CommentDTO() {
     }
@@ -91,5 +92,13 @@ public class CommentDTO {
 
     public void setAuthorProfilePicture(String authorProfilePicture) {
         this.authorProfilePicture = authorProfilePicture;
+    }
+
+    public boolean isRemovedByModerator() {
+        return removedByModerator;
+    }
+
+    public void setRemovedByModerator(boolean removedByModerator) {
+        this.removedByModerator = removedByModerator;
     }
 }

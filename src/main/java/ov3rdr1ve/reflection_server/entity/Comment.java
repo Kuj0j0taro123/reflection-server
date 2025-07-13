@@ -35,6 +35,9 @@ public class Comment {
     @CreationTimestamp
     private Instant createdOn;
 
+    @Column(name = "removed_by_moderator")
+    private boolean removedByModerator;
+
     public Comment() {
     }
 
@@ -85,5 +88,13 @@ public class Comment {
 
     public void setUserLikes(Set<User> userLikes) {
         this.userLikes = userLikes;
+    }
+
+    public boolean isRemovedByModerator() {
+        return removedByModerator;
+    }
+
+    public void setRemovedByModerator(boolean removedByModerator) {
+        this.removedByModerator = removedByModerator;
     }
 }

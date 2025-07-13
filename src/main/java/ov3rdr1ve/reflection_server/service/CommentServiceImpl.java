@@ -37,6 +37,7 @@ public class CommentServiceImpl implements CommentService{
         commentDTO.setText(comment.getText());
         commentDTO.setCreatedOn(comment.getCreatedOn());
         commentDTO.setAuthorProfilePicture(comment.getAuthor().getProfilePicture());
+        commentDTO.setRemovedByModerator(comment.isRemovedByModerator());
 
         if (comment.getUserLikes() != null) {
             commentDTO.setUserLikes(comment.getUserLikes().size());
@@ -148,6 +149,23 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void dislikeComment(String username, int commentId) {
 
+    }
+
+    @Override
+    public boolean deleteComment(int commentId) {
+        return false;
+    }
+
+    @Override
+    public CommentDTO removeComment(int commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        comment.setText("Comment removed by " + moderator.getUsername() + ".");
+        comment.setRemovedByModerator(true);
+        commentRepository.save(comment);
+
+        return convertToDto(comment);
     }
 
 

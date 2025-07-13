@@ -23,9 +23,10 @@ public interface PostService {
     public PostDTO likePost(String username, int postId);
     public PostDTO unlikePost(String username, int postId);
     public void dislikePost(String username, int postId);
+    public boolean deletePost(int postId);
 
     // moderator methods below
     public PostDTO removePost(int postId);
-    public boolean deletePost(int postId);
+
 
 }
