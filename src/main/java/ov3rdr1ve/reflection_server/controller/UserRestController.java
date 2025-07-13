@@ -120,4 +120,16 @@ public class UserRestController {
         //todo: use the notification service you just added as a bean to this controller
         return notificationService.getAllUserNotifications();
     }
+
+    @DeleteMapping("/notification/{id}")
+    public ResponseEntity<?> deleteNotification(@PathVariable int id){
+        notificationService.deleteById(id);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/notifications")
+    public ResponseEntity<?> deleteAllNotifications(){
+        notificationService.deleteAll();
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
 }

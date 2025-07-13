@@ -11,6 +11,7 @@ import ov3rdr1ve.reflection_server.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
@@ -67,4 +68,24 @@ public class NotificationServiceImpl implements NotificationService{
 
         return notifications;
     }
+
+    @Override
+    public boolean deleteById(int id) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        Set<Notification> notifications = user.getReceivedNotifications();
+        boolean ret = notifications.removeIf(n -> n.getId() == id);
+        userRepository.save(user);
+        return ret;
+    }
+
+    @Override
+    public void deleteAll() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        user.getReceivedNotifications().clear();
+        userRepository.save(user);
+    }
+
+
 }

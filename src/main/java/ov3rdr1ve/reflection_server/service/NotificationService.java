@@ -12,4 +12,7 @@ public interface NotificationService {
     public Notification findById(int id);
     public NotificationDTO createNotification();
     public List<NotificationDTO> getAllUserNotifications();
+
+    public boolean deleteById(int id);
+    public void deleteAll();
 }
