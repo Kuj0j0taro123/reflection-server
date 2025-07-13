@@ -124,12 +124,12 @@ public class UserRestController {
     @DeleteMapping("/notification/{id}")
     public ResponseEntity<?> deleteNotification(@PathVariable int id){
         notificationService.deleteById(id);
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new Response("Notification successfully deleted."), HttpStatus.OK);
     }
 
     @DeleteMapping("/notifications")
     public ResponseEntity<?> deleteAllNotifications(){
         notificationService.deleteAll();
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new Response("Notifications successfully deleted."), HttpStatus.OK);
     }
 }
