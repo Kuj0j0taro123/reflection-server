@@ -31,7 +31,7 @@ public class Post {
     private Set<User> views;
 
 
-    @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments;
 
     @ManyToOne

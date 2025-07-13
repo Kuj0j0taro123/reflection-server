@@ -117,6 +117,14 @@ public class PostRestController {
         return postService.findLikedPosts();
     }
 
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable int postId){
+        if (postService.deletePost(postId))
+            return new ResponseEntity<>(new Response("Post successfully deleted."), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(new Response("Bad post deletion request"), HttpStatus.BAD_REQUEST);
+    }
+
 //    @GetMapping("/posts/name/{authorUsername}")
 //    public List<PostDTO> getByAuthorUsername(@PathVariable String authorUsername){
 //        return postService.findByAuthorUsername(authorUsername);

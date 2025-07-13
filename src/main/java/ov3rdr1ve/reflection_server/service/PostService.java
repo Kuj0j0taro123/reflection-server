@@ -26,5 +26,6 @@ public interface PostService {
 
     // moderator methods below
     public PostDTO removePost(int postId);
+    public boolean deletePost(int postId);
 
 }
