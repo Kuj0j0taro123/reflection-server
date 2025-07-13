@@ -11,6 +11,7 @@ import ov3rdr1ve.reflection_server.dto.report.ReportedCommentDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedPostDTO;
 import ov3rdr1ve.reflection_server.dto.report.ReportedUserDTO;
 import ov3rdr1ve.reflection_server.service.ModeratorService;
+import ov3rdr1ve.reflection_server.service.PostService;
 
 import java.util.List;
 
@@ -19,9 +20,11 @@ import java.util.List;
 public class ModerationRestController {
 
     private final ModeratorService moderatorService;
+    private final PostService postService;
 
-    public ModerationRestController(ModeratorService moderatorService){
+    public ModerationRestController(ModeratorService moderatorService, PostService postService){
         this.moderatorService = moderatorService;
+        this.postService = postService;
     }
 
     @GetMapping("/moderator/posts")
@@ -65,4 +68,8 @@ public class ModerationRestController {
         return new ResponseEntity<>(moderatorService.unbanUser(req), HttpStatus.OK);
     }
 
+    @DeleteMapping("/moderator/remove/post/{postId}")
+    public ResponseEntity<?> removePost(@PathVariable int postId){
+        return new ResponseEntity<>(postService.removePost(postId), HttpStatus.OK);
+    }
 }

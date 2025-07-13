@@ -45,6 +45,9 @@ public class Post {
     @JoinColumn(name = "media_id", referencedColumnName = "id")
     private Media media;
 
+    @Column(name = "removed_by_moderator")
+    private boolean removedByModerator = false;
+
     public Post() {
     }
 
@@ -110,5 +113,13 @@ public class Post {
 
     public void setViews(Set<User> views) {
         this.views = views;
+    }
+
+    public boolean isRemovedByModerator() {
+        return removedByModerator;
+    }
+
+    public void setRemovedByModerator(boolean removedByModerator) {
+        this.removedByModerator = removedByModerator;
     }
 }

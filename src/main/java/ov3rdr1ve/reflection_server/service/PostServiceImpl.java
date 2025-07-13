@@ -39,6 +39,7 @@ public class PostServiceImpl implements PostService{
         postDTO.setText(post.getText());
         postDTO.setAuthorId(post.getAuthor().getId());
         postDTO.setAuthorUsername(post.getAuthor().getUsername());
+        postDTO.setRemovedByModerator(post.isRemovedByModerator());
 
         if (post.getUserLikes() != null){
             postDTO.setUserLikes(post.getUserLikes().size());
@@ -241,6 +242,21 @@ public class PostServiceImpl implements PostService{
     public void dislikePost(String username, int postId) throws NoSuchElementException {
 
     }
+
+    @Override
+    public PostDTO removePost(int postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        if (post.getMedia() != null)
+            post.getMedia().setUrl(null);
+        post.setText("Post removed by " + moderator.getUsername() + ".");
+        post.setRemovedByModerator(true);
+        postRepository.save(post);
+
+        return convertToDto(post);
+    }
+
 
 //    @Override
 //    public List<PostDTO> findByAuthorUsername(String username) {

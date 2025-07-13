@@ -17,6 +17,7 @@ public class PostDTO {
     private boolean isLiked; // if the user requesting this post liked it
     private int numComments;
     private String mediaUrl;
+    private boolean removedByModerator;
 
     public PostDTO() {
     }
@@ -108,5 +109,13 @@ public class PostDTO {
 
     public void setAuthorProfilePicture(String authorProfilePicture) {
         this.authorProfilePicture = authorProfilePicture;
+    }
+
+    public boolean isRemovedByModerator() {
+        return removedByModerator;
+    }
+
+    public void setRemovedByModerator(boolean removedByModerator) {
+        this.removedByModerator = removedByModerator;
     }
 }
