@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
-import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.service.UserService;
 
 @RestController
@@ -53,5 +52,15 @@ public class AuthController {
     public ResponseEntity<?> logout (HttpServletRequest request){
         request.getSession().invalidate();
         return new ResponseEntity<>(new Response("Successfully logged out"), HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody(required = true) LoginRequest creds){
+        UserDTO newUser = userService.createUser(creds);
+        if (newUser == null)
+            return new ResponseEntity<>(new Response("Could not create your account." +
+                    " Username might already exist or your username or password is not valid."),
+                    HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 }

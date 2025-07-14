@@ -1,6 +1,7 @@
 package ov3rdr1ve.reflection_server.service;
 
 import ov3rdr1ve.reflection_server.dto.PostDTO;
+import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
 
@@ -21,5 +22,7 @@ public interface UserService {
     public UserDTO unfollowUser(String userRequesting, String userReceiving);
     public UserDTO changeUserDescription(String description);
     public UserDTO changeProfilePicture(String imageUrl);
+
+    public UserDTO createUser(LoginRequest credentials);
 
 }

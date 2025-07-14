@@ -2,8 +2,10 @@ package ov3rdr1ve.reflection_server.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
+import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.Notification;
 import ov3rdr1ve.reflection_server.entity.Post;
@@ -18,11 +20,15 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private NotificationRepository notificationRepository;
+    private PasswordEncoder passwordEncoder;
 
 
-    public UserServiceImpl(UserRepository userRepository, NotificationRepository notificationRepository) {
+    public UserServiceImpl(UserRepository userRepository,
+                           NotificationRepository notificationRepository,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.notificationRepository = notificationRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -31,17 +37,36 @@ public class UserServiceImpl implements UserService {
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
         userDTO.setDescription(user.getDescription());
-        userDTO.setNumFollowers(user.getFollowersList().size());
-        userDTO.setNumFollowing(user.getFollowingList().size());
-        userDTO.setNumPosts(user.getPosts().size());
+        if (user.getFollowersList() != null)
+            userDTO.setNumFollowers(user.getFollowersList().size());
+        else
+            userDTO.setNumFollowers(0);
+
+        if (user.getFollowingList() != null)
+            userDTO.setNumFollowing(user.getFollowingList().size());
+        else
+            userDTO.setNumFollowing(0);
+
+        if (user.getPosts() != null)
+            userDTO.setNumPosts(user.getPosts().size());
+        else
+            userDTO.setNumPosts(0);
         userDTO.setCreatedOn(user.getCreatedOn());
         userDTO.setProfilePicture(user.getProfilePicture());
         userDTO.setBanned(user.isBanned());
         userDTO.setModerator(user.getRoles().contains("MODERATOR"));
 
-        User requester = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
-        userDTO.setFollowedByYou(user.getFollowersList().contains(requester));
-        userDTO.setFollowingYou(user.getFollowingList().contains(requester));
+        try{
+            User requester = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
+            userDTO.setFollowedByYou(user.getFollowersList().contains(requester));
+            userDTO.setFollowingYou(user.getFollowingList().contains(requester));
+        }catch (NoSuchElementException ex){
+            userDTO.setFollowingYou(false);
+            userDTO.setFollowedByYou(false);
+
+        }
+
+
 
         return userDTO;
     }
@@ -149,6 +174,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return convertToDto(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO createUser(LoginRequest credentials) {
+
+        if (credentials.getUsername().isEmpty() || credentials.getPassword().isEmpty())
+            return null; // users need to have a username and password
+
+        List<User> users = userRepository.findAll();
+        for (User user : users){
+            if (credentials.getUsername().equals(user.getUsername()))
+                return null; // user already exists
+        }
+
+        User newUser = new User();
+        newUser.setUsername(credentials.getUsername());
+        newUser.setPassword(passwordEncoder.encode(credentials.getPassword()));
+        newUser.setDescription("");
+        newUser.setRoles(List.of("USER"));
+        newUser = userRepository.save(newUser);
+
+        return convertToDto(newUser);
     }
 
 }
