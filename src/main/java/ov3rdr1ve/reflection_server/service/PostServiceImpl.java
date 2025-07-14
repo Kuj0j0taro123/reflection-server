@@ -225,6 +225,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public PostDTO unlikePost(String username, int postId) throws NoSuchElementException {
         User user = userRepository.findByUsername(username).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
@@ -244,6 +245,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public PostDTO removePost(int postId) {
         Post post = postRepository.findById(postId).orElseThrow();
         User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
@@ -258,6 +260,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public boolean deletePost(int postId) {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow();
@@ -267,6 +270,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public void deleteAllPosts() {
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow();

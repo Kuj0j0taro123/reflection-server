@@ -161,6 +161,16 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional
+    public void deleteAllComments() {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        user.getComments().clear();
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
     public CommentDTO removeComment(int commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         User moderator = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())

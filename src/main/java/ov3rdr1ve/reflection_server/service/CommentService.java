@@ -16,6 +16,7 @@ public interface CommentService {
     public CommentDTO unlikeComment(String username, int commentId);
     public void dislikeComment(String username, int commentId);
     public boolean deleteComment(int commentId);
+    public void deleteAllComments();
 
     // moderator methods below
     public CommentDTO removeComment(int commentId);

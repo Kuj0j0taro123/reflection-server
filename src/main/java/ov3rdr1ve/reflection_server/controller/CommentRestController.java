@@ -64,4 +64,10 @@ public class CommentRestController {
         else
             return new ResponseEntity<>(new Response("Bad comment deletion request"), HttpStatus.BAD_REQUEST);
     }
+
+    @DeleteMapping("/comments")
+    public ResponseEntity<?> deleteAllComments(){
+        commentService.deleteAllComments();
+        return new ResponseEntity<>(new Response("All comments deleted successfully."), HttpStatus.OK);
+    }
 }
