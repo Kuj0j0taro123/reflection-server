@@ -135,7 +135,7 @@ public class UserRestController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<?> deleteAccount(@RequestBody LoginRequest creds){
-        return new ResponseEntity<>(userService.deleteUser(creds), HttpStatus.OK);
+    public ResponseEntity<?> deleteAccount(){
+        return new ResponseEntity<>(userService.deleteUser(), HttpStatus.OK);
     }
 }

@@ -25,7 +25,7 @@ public interface UserService {
     public UserDTO changeProfilePicture(String imageUrl);
 
     public UserDTO createUser(LoginRequest credentials);
-    public boolean deleteUser(LoginRequest credentials);
+    public boolean deleteUser();
     public boolean changePassword(PasswordChangeRequest request);
 
 }

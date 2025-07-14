@@ -69,6 +69,11 @@ public class AuthController {
 
     @PostMapping("/change_password")
     public ResponseEntity<?> changePassword(@RequestBody(required = true) PasswordChangeRequest req){
-        return new ResponseEntity<>(userService.changePassword(req), HttpStatus.OK);
+        boolean ret = userService.changePassword(req);
+        if (ret){
+            return new ResponseEntity<>(ret, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(new Response("Incorrect old password."), HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,15 +1,12 @@
 package ov3rdr1ve.reflection_server.service;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
 import ov3rdr1ve.reflection_server.dto.actions.PasswordChangeRequest;
-import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.Comment;
 import ov3rdr1ve.reflection_server.entity.Notification;
@@ -17,7 +14,9 @@ import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
 import ov3rdr1ve.reflection_server.repository.NotificationRepository;
 import ov3rdr1ve.reflection_server.repository.UserRepository;
+import ov3rdr1ve.reflection_server.security.HttpSessionTracker;
 
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -204,32 +203,55 @@ public class UserServiceImpl implements UserService {
         return convertToDto(newUser);
     }
 
+//    @Override
+//    @Transactional
+//    public boolean deleteUser(LoginRequest credentials) {
+//        if (credentials.getPassword().isEmpty())
+//            return false;
+//
+//        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+//                .orElseThrow();
+//
+//        if (passwordEncoder.matches(credentials.getPassword(), user.getPassword())){
+//            for (Post post : user.getPosts()){
+//                post.setText("Deleted.");
+//                post.setMedia(null);
+//            }
+//            for (Comment comment : user.getComments()){
+//                comment.setText("Deleted.");
+//            }
+//
+//            user.setDescription("");
+//            user.setRoles(List.of("DELETED"));
+//            user.setUsername("Deleted [" + user.getId() + "]");
+////            userRepository.save(user);
+//            return true;
+//        }
+//        return false;
+//    }
+
     @Override
     @Transactional
-    public boolean deleteUser(LoginRequest credentials) {
-        if (credentials.getPassword().isEmpty())
-            return false;
-
+    public boolean deleteUser(){
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow();
 
-        if (passwordEncoder.matches(credentials.getPassword(), user.getPassword())){
-            for (Post post : user.getPosts()){
-                post.setText("Deleted.");
-                post.setMedia(null);
-            }
-            for (Comment comment : user.getComments()){
-                comment.setText("Deleted.");
-            }
-
-            user.setDescription("");
-            user.setRoles(List.of("DELETED"));
-            user.setUsername("Deleted [" + user.getId() + "]");
-//            userRepository.save(user);
-            return true;
+        for (Post post : user.getPosts()) {
+            post.setText("Deleted.");
+            post.setMedia(null);
         }
-        return false;
+
+        for (Comment comment : user.getComments()){
+            comment.setText("Deleted.");
+        }
+
+        user.setDescription("This account was deleted on " + Instant.now().toString());
+        user.setRoles(List.of("DELETED"));
+        user.setUsername("Deleted [" + user.getId() + "]");
+
+        return true;
     }
+
 
     @Override
     @Transactional
