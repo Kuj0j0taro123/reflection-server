@@ -12,9 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
+import ov3rdr1ve.reflection_server.dto.actions.PasswordChangeRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.service.UserService;
+
+import javax.security.auth.login.LoginContext;
 
 @RestController
 @RequestMapping("/api")
@@ -62,5 +65,10 @@ public class AuthController {
                     " Username might already exist or your username or password is not valid."),
                     HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/change_password")
+    public ResponseEntity<?> changePassword(@RequestBody(required = true) PasswordChangeRequest req){
+        return new ResponseEntity<>(userService.changePassword(req), HttpStatus.OK);
     }
 }

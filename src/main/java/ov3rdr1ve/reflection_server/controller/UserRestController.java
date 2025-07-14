@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ov3rdr1ve.reflection_server.dto.NotificationDTO;
 import ov3rdr1ve.reflection_server.dto.actions.ChangeProfileDescriptionRequest;
 import ov3rdr1ve.reflection_server.dto.actions.FollowUserRequest;
+import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
 import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
 import ov3rdr1ve.reflection_server.entity.User;
@@ -131,5 +132,10 @@ public class UserRestController {
     public ResponseEntity<?> deleteAllNotifications(){
         notificationService.deleteAll();
         return new ResponseEntity<>(new Response("Notifications successfully deleted."), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<?> deleteAccount(@RequestBody LoginRequest creds){
+        return new ResponseEntity<>(userService.deleteUser(creds), HttpStatus.OK);
     }
 }

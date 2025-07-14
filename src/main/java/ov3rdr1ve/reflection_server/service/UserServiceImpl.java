@@ -1,12 +1,17 @@
 package ov3rdr1ve.reflection_server.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ov3rdr1ve.reflection_server.dto.PostDTO;
 import ov3rdr1ve.reflection_server.dto.actions.LoginRequest;
+import ov3rdr1ve.reflection_server.dto.actions.PasswordChangeRequest;
+import ov3rdr1ve.reflection_server.dto.actions.Response;
 import ov3rdr1ve.reflection_server.dto.user.UserDTO;
+import ov3rdr1ve.reflection_server.entity.Comment;
 import ov3rdr1ve.reflection_server.entity.Notification;
 import ov3rdr1ve.reflection_server.entity.Post;
 import ov3rdr1ve.reflection_server.entity.User;
@@ -197,6 +202,49 @@ public class UserServiceImpl implements UserService {
         newUser = userRepository.save(newUser);
 
         return convertToDto(newUser);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteUser(LoginRequest credentials) {
+        if (credentials.getPassword().isEmpty())
+            return false;
+
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+
+        if (passwordEncoder.matches(credentials.getPassword(), user.getPassword())){
+            for (Post post : user.getPosts()){
+                post.setText("Deleted.");
+                post.setMedia(null);
+            }
+            for (Comment comment : user.getComments()){
+                comment.setText("Deleted.");
+            }
+
+            user.setDescription("");
+            user.setRoles(List.of("DELETED"));
+            user.setUsername("Deleted [" + user.getId() + "]");
+//            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public boolean changePassword(PasswordChangeRequest request) {
+        if (request.getNewPassword().isEmpty())
+            return false;
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
+                .orElseThrow();
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        }
+
+        return false;
     }
 
 }
